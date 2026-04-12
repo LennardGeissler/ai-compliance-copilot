@@ -39,7 +39,7 @@
     "@ai-compliance/policy-engine": "workspace:*"
   },
   "devDependencies": {
-    "vite": "^6.2.0",
+    "vite": "^8.0.8",
     "typescript": "^5.7.0",
     "@types/chrome": "^0.1.40",
     "vitest": "^3.1.1"
