@@ -1,0 +1,160 @@
+{
+  "ext_name": { "message": "AI Compliance Copilot" },
+  "ext_description": {
+    "message": "Detect and prevent sensitive data from being sent to external AI tools"
+  },
+
+  "header_subtitle": { "message": "Data Protection" },
+  "theme_toggle_title": { "message": "Switch theme" },
+  "tab_activity": { "message": "Activity" },
+  "tab_prompts": { "message": "Prompt Library" },
+
+  "status_checking": { "message": "Checking…" },
+  "status_connected": { "message": "Connected & Protected" },
+  "status_disconnected": { "message": "Not connected — default settings" },
+
+  "badge_active": { "message": "Active" },
+  "badge_na": { "message": "N/A" },
+  "badge_company": { "message": "Company" },
+
+  "section_today": { "message": "Today's Activity" },
+  "stat_detected": { "message": "Detected" },
+  "stat_blocked": { "message": "Blocked" },
+  "stat_override": { "message": "Override" },
+
+  "section_current_page": { "message": "Current Page" },
+  "info_ai_tool": { "message": "AI Tool" },
+  "info_protection": { "message": "Protection" },
+  "current_tool_none": { "message": "No AI tool" },
+
+  "section_recent": { "message": "Recent Detections" },
+  "empty_no_detections": { "message": "No detections yet." },
+  "empty_session_clean": { "message": "Your session is clean." },
+
+  "action_blocked": { "message": "Blocked" },
+  "action_override": { "message": "Override" },
+  "action_warning": { "message": "Warning" },
+
+  "section_connect": { "message": "Optional: Connect enterprise dashboard" },
+  "input_url_placeholder": { "message": "Dashboard URL (e.g. http://localhost:3000)" },
+  "input_token_placeholder": { "message": "Auth Token" },
+  "btn_connect": { "message": "Connect" },
+  "connect_standalone_hint": {
+    "message": "Not required in standalone mode — the extension works without a dashboard."
+  },
+  "btn_open_dashboard": { "message": "Open Dashboard" },
+
+  "section_company_library": { "message": "Company Library" },
+  "section_my_prompts": { "message": "My Prompts" },
+  "btn_new": { "message": "New" },
+  "prompt_form_new": { "message": "New Prompt" },
+  "prompt_form_edit": { "message": "Edit Prompt" },
+  "prompt_title_placeholder": { "message": "Title (e.g. 'Code Review Checklist')" },
+  "prompt_content_placeholder": { "message": "Prompt text…" },
+  "btn_save": { "message": "Save" },
+  "btn_cancel": { "message": "Cancel" },
+  "btn_use": { "message": "Use" },
+  "btn_edit_title": { "message": "Edit" },
+  "btn_delete_title": { "message": "Delete" },
+  "prompts_empty_line1": { "message": "No personal prompts saved yet." },
+  "prompts_empty_line2": { "message": "Click <strong>New</strong> to create your first prompt." },
+
+  "footer_tagline": { "message": "Privacy-first AI Governance" },
+
+  "category_email": { "message": "Email address" },
+  "category_phone": { "message": "Phone number" },
+  "category_iban": { "message": "IBAN" },
+  "category_credit_card": { "message": "Credit card" },
+  "category_address": { "message": "Postal address" },
+  "category_customer_id": { "message": "Customer / order ID" },
+  "category_employee_id": { "message": "Employee ID" },
+  "category_secret": { "message": "Secret / API key" },
+  "category_hr_data": { "message": "HR data" },
+  "category_custom_keyword": { "message": "Restricted keyword" },
+
+  "category_email_risk": {
+    "message": "Email addresses are personal data under GDPR Art. 4 and must not be transmitted to external AI services without a legal basis."
+  },
+  "category_email_action": {
+    "message": "Replace the address with a neutral phrase such as 'the user concerned' or 'colleague XY' — no real mail address."
+  },
+  "category_phone_risk": {
+    "message": "Phone numbers allow direct identification of individuals and are subject to data protection rules."
+  },
+  "category_phone_action": {
+    "message": "Remove the number or replace it with '[phone number]'. Describe the matter without a concrete sequence of digits."
+  },
+  "category_iban_risk": {
+    "message": "IBAN numbers are highly sensitive banking data. Unauthorised disclosure can have civil and criminal consequences."
+  },
+  "category_iban_action": {
+    "message": "Remove the IBAN completely. Use 'the account of the person concerned' without any account number instead."
+  },
+  "category_credit_card_risk": {
+    "message": "Credit card data is subject to PCI-DSS compliance obligations. Transmitting it to external services is prohibited."
+  },
+  "category_credit_card_action": {
+    "message": "Remove the card number. Describe the issue with 'the payment method' without any concrete digits."
+  },
+  "category_address_risk": {
+    "message": "Postal addresses allow physical localisation of individuals and are protected data under GDPR."
+  },
+  "category_address_action": {
+    "message": "Replace the address with 'customer address' or 'shipping address' — without street, ZIP, or city."
+  },
+  "category_customer_id_risk": {
+    "message": "Customer and order numbers can be used to identify individuals or link data sets."
+  },
+  "category_customer_id_action": {
+    "message": "Pseudonymise the ID (e.g. 'customer A', 'order #XYZ') or describe the case without a real reference number."
+  },
+  "category_employee_id_risk": {
+    "message": "Employee numbers are internal identifiers and must not be shared with external services."
+  },
+  "category_employee_id_action": {
+    "message": "Replace the number with a role description such as 'the employee concerned' or 'colleague from team X'."
+  },
+  "category_secret_risk": {
+    "message": "API keys, passwords, and tokens grant access to systems. A compromise can lead to serious security incidents."
+  },
+  "category_secret_action": {
+    "message": "Remove the secret immediately and rotate it in your system. Describe the issue without any concrete credentials."
+  },
+  "category_hr_data_risk": {
+    "message": "Salary data, social security numbers, and other HR information are particularly sensitive data under GDPR Art. 9."
+  },
+  "category_hr_data_action": {
+    "message": "Replace concrete HR data with generic descriptions ('salary range', 'person concerned') without real values."
+  },
+  "category_custom_keyword_risk": {
+    "message": "This term has been classified as confidential by your organisation's compliance policies."
+  },
+  "category_custom_keyword_action": {
+    "message": "Remove or rephrase the flagged term in line with your internal communication policies."
+  },
+
+  "overlay_title_blocked": { "message": "Transmission blocked" },
+  "overlay_title_warning": { "message": "Sensitive data detected" },
+  "overlay_risk_critical": { "message": "Critical risk" },
+  "overlay_risk_high": { "message": "High risk" },
+  "overlay_default_block_message": {
+    "message": "This message contains restricted data and cannot be sent under your organisation's compliance policies."
+  },
+  "overlay_default_warn_message": {
+    "message": "Your message contains potentially sensitive information. Please review it carefully before continuing."
+  },
+  "overlay_why_blocked": { "message": "Why was this blocked?" },
+  "overlay_section_detected_data": { "message": "Detected data" },
+  "overlay_recommendation_label": { "message": "Recommendation" },
+  "overlay_triggered_policies": { "message": "Triggered policies" },
+  "overlay_redact_section_label": { "message": "Cleaned version" },
+  "overlay_redact_hint": {
+    "message": "Sensitive parts have been replaced with placeholders. You can still adjust the text before sending."
+  },
+  "overlay_redact_textarea_aria": { "message": "Cleaned text" },
+  "overlay_btn_anonymize": { "message": "Anonymise text" },
+  "overlay_btn_send_redacted": { "message": "Send cleaned" },
+  "overlay_btn_back": { "message": "Back & edit" },
+  "overlay_btn_override_send": { "message": "Override & send" },
+  "overlay_btn_send_anyway": { "message": "Send anyway" }
+}

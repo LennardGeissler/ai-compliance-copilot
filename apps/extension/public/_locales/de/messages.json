@@ -1,0 +1,162 @@
+{
+  "ext_name": { "message": "AI Compliance Copilot" },
+  "ext_description": {
+    "message": "Erkennt und verhindert die Übertragung sensibler Daten an externe KI-Tools"
+  },
+
+  "header_subtitle": { "message": "Data Protection" },
+  "theme_toggle_title": { "message": "Design wechseln" },
+  "tab_activity": { "message": "Aktivität" },
+  "tab_prompts": { "message": "Prompt-Bibliothek" },
+
+  "status_checking": { "message": "Prüfe…" },
+  "status_connected": { "message": "Verbunden & Geschützt" },
+  "status_disconnected": { "message": "Nicht verbunden — Standard-Einstellungen" },
+
+  "badge_active": { "message": "Aktiv" },
+  "badge_na": { "message": "N/A" },
+  "badge_company": { "message": "Unternehmen" },
+
+  "section_today": { "message": "Heutige Aktivität" },
+  "stat_detected": { "message": "Erkannt" },
+  "stat_blocked": { "message": "Blockiert" },
+  "stat_override": { "message": "Override" },
+
+  "section_current_page": { "message": "Aktuelle Seite" },
+  "info_ai_tool": { "message": "KI-Tool" },
+  "info_protection": { "message": "Schutz" },
+  "current_tool_none": { "message": "Kein KI-Tool" },
+
+  "section_recent": { "message": "Letzte Erkennungen" },
+  "empty_no_detections": { "message": "Noch keine Erkennungen." },
+  "empty_session_clean": { "message": "Deine Sitzung ist sauber." },
+
+  "action_blocked": { "message": "Blockiert" },
+  "action_override": { "message": "Override" },
+  "action_warning": { "message": "Warnung" },
+
+  "section_connect": { "message": "Optional: Enterprise-Dashboard verbinden" },
+  "input_url_placeholder": { "message": "Dashboard URL (z. B. http://localhost:3000)" },
+  "input_token_placeholder": { "message": "Auth Token" },
+  "btn_connect": { "message": "Verbinden" },
+  "connect_standalone_hint": {
+    "message": "Nicht nötig im Standalone-Modus — die Extension funktioniert ohne Dashboard."
+  },
+  "btn_open_dashboard": { "message": "Dashboard öffnen" },
+
+  "section_company_library": { "message": "Unternehmens-Bibliothek" },
+  "section_my_prompts": { "message": "Meine Prompts" },
+  "btn_new": { "message": "Neu" },
+  "prompt_form_new": { "message": "Neuer Prompt" },
+  "prompt_form_edit": { "message": "Prompt bearbeiten" },
+  "prompt_title_placeholder": { "message": "Titel (z. B. 'Code Review Checkliste')" },
+  "prompt_content_placeholder": { "message": "Prompt-Text…" },
+  "btn_save": { "message": "Speichern" },
+  "btn_cancel": { "message": "Abbrechen" },
+  "btn_use": { "message": "Verwenden" },
+  "btn_edit_title": { "message": "Bearbeiten" },
+  "btn_delete_title": { "message": "Löschen" },
+  "prompts_empty_line1": { "message": "Noch keine eigenen Prompts gespeichert." },
+  "prompts_empty_line2": {
+    "message": "Klicke auf <strong>Neu</strong>, um deinen ersten Prompt anzulegen."
+  },
+
+  "footer_tagline": { "message": "Privacy-first KI-Governance" },
+
+  "category_email": { "message": "E-Mail-Adresse" },
+  "category_phone": { "message": "Telefonnummer" },
+  "category_iban": { "message": "IBAN" },
+  "category_credit_card": { "message": "Kreditkarte" },
+  "category_address": { "message": "Postanschrift" },
+  "category_customer_id": { "message": "Kunden- / Bestell-ID" },
+  "category_employee_id": { "message": "Mitarbeiter-ID" },
+  "category_secret": { "message": "Secret / API-Schlüssel" },
+  "category_hr_data": { "message": "HR-Daten" },
+  "category_custom_keyword": { "message": "Gesperrtes Schlüsselwort" },
+
+  "category_email_risk": {
+    "message": "E-Mail-Adressen sind personenbezogene Daten gemäß DSGVO Art. 4 und dürfen ohne Rechtsgrundlage nicht an externe KI-Dienste übermittelt werden."
+  },
+  "category_email_action": {
+    "message": "Ersetze die Adresse durch eine neutrale Formulierung wie 'der betreffende Nutzer' oder 'Kollege XY' — ohne echte Mailadresse."
+  },
+  "category_phone_risk": {
+    "message": "Telefonnummern ermöglichen die direkte Identifizierung von Personen und unterliegen dem Datenschutz."
+  },
+  "category_phone_action": {
+    "message": "Entferne die Nummer oder ersetze sie durch '[Telefonnummer]'. Beschreibe den Sachverhalt ohne konkrete Ziffernfolge."
+  },
+  "category_iban_risk": {
+    "message": "IBAN-Nummern sind Bankdaten der höchsten Schutzklasse. Ihre unerlaubte Weitergabe kann zivil- und strafrechtliche Folgen haben."
+  },
+  "category_iban_action": {
+    "message": "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer."
+  },
+  "category_credit_card_risk": {
+    "message": "Kreditkartendaten fallen unter PCI-DSS-Compliance-Pflichten. Ihre Übermittlung an externe Dienste ist untersagt."
+  },
+  "category_credit_card_action": {
+    "message": "Entferne die Kartennummer. Beschreibe das Problem mit 'die Zahlungsmethode' ohne konkrete Ziffern."
+  },
+  "category_address_risk": {
+    "message": "Postanschriften ermöglichen die physische Lokalisierung von Personen und sind nach DSGVO schützenswerte Daten."
+  },
+  "category_address_action": {
+    "message": "Ersetze die Adresse durch 'Adresse des Kunden' oder 'Lieferadresse' — ohne Straße, PLZ und Ort."
+  },
+  "category_customer_id_risk": {
+    "message": "Kunden- und Bestellnummern können genutzt werden, um Personen zu identifizieren oder Daten zu verknüpfen."
+  },
+  "category_customer_id_action": {
+    "message": "Pseudonymisiere die ID (z. B. 'Kunde A', 'Bestellung #XYZ') oder beschreibe den Fall ohne echte Referenznummer."
+  },
+  "category_employee_id_risk": {
+    "message": "Mitarbeiternummern sind interne Identifikatoren und dürfen nicht an externe Dienste weitergegeben werden."
+  },
+  "category_employee_id_action": {
+    "message": "Ersetze die Nummer durch eine Rollenbeschreibung wie 'der betreffende Mitarbeiter' oder 'Kollege aus Team X'."
+  },
+  "category_secret_risk": {
+    "message": "API-Schlüssel, Passwörter und Tokens gewähren Zugriff auf Systeme. Eine Kompromittierung kann zu schwerwiegenden Sicherheitsvorfällen führen."
+  },
+  "category_secret_action": {
+    "message": "Entferne den Secret sofort und rotiere ihn in deinem System. Beschreibe das Problem ohne konkrete Credentials."
+  },
+  "category_hr_data_risk": {
+    "message": "Gehaltsdaten, Sozialversicherungsnummern und andere HR-Informationen sind besonders sensible Daten gemäß DSGVO Art. 9."
+  },
+  "category_hr_data_action": {
+    "message": "Ersetze konkrete HR-Daten durch Allgemeinbeschreibungen ('Gehaltsbereich', 'betreffende Person') ohne echte Werte."
+  },
+  "category_custom_keyword_risk": {
+    "message": "Dieser Begriff wurde durch die Compliance-Richtlinien deiner Organisation als vertraulich eingestuft."
+  },
+  "category_custom_keyword_action": {
+    "message": "Entferne oder umschreibe den markierten Begriff entsprechend eurer internen Kommunikationsrichtlinien."
+  },
+
+  "overlay_title_blocked": { "message": "Übertragung blockiert" },
+  "overlay_title_warning": { "message": "Sensible Daten erkannt" },
+  "overlay_risk_critical": { "message": "Kritisches Risiko" },
+  "overlay_risk_high": { "message": "Hohes Risiko" },
+  "overlay_default_block_message": {
+    "message": "Diese Nachricht enthält gesperrte Daten und kann gemäß den Compliance-Richtlinien deiner Organisation nicht gesendet werden."
+  },
+  "overlay_default_warn_message": {
+    "message": "Deine Nachricht enthält potenziell sensible Informationen. Bitte prüfe sie sorgfältig, bevor du fortfährst."
+  },
+  "overlay_why_blocked": { "message": "Warum wurde das blockiert?" },
+  "overlay_section_detected_data": { "message": "Erkannte Daten" },
+  "overlay_recommendation_label": { "message": "Empfehlung" },
+  "overlay_triggered_policies": { "message": "Ausgelöste Richtlinien" },
+  "overlay_redact_section_label": { "message": "Bereinigte Version" },
+  "overlay_redact_hint": {
+    "message": "Sensible Stellen wurden durch Platzhalter ersetzt. Du kannst den Text noch anpassen, bevor du ihn sendest."
+  },
+  "overlay_redact_textarea_aria": { "message": "Bereinigter Text" },
+  "overlay_btn_anonymize": { "message": "Text anonymisieren" },
+  "overlay_btn_send_redacted": { "message": "Bereinigt senden" },
+  "overlay_btn_back": { "message": "Zurück & Bearbeiten" },
+  "overlay_btn_override_send": { "message": "Override & senden" },
+  "overlay_btn_send_anyway": { "message": "Trotzdem senden" }
+}

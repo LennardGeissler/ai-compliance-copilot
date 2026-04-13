@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -888,13 +888,14 @@
       </div>
       <div class="header-text">
         <div class="header-title">AI Compliance Copilot</div>
-        <div class="header-sub">Data Protection</div>
+        <div class="header-sub" data-i18n="header_subtitle">Data Protection</div>
       </div>
       <button
         class="theme-toggle"
         id="themeToggle"
-        title="Design wechseln"
-        aria-label="Design wechseln"
+        data-i18n-title="theme_toggle_title"
+        title="Switch theme"
+        aria-label="Switch theme"
       >
         <!-- Sun: visible in dark mode → click to switch to light -->
         <svg
@@ -933,8 +934,10 @@
 
     <!-- Tab bar -->
     <div class="tab-bar">
-      <button class="tab-btn is-active" id="tabActivityBtn">Aktivität</button>
-      <button class="tab-btn" id="tabPromptsBtn">Prompt-Bibliothek</button>
+      <button class="tab-btn is-active" id="tabActivityBtn" data-i18n="tab_activity">
+        Activity
+      </button>
+      <button class="tab-btn" id="tabPromptsBtn" data-i18n="tab_prompts">Prompt Library</button>
     </div>
 
     <div class="content">
@@ -946,34 +949,34 @@
             <div id="pingDot" class="ping-dot ping-dot--inactive"></div>
             <div id="pingRing" class="ping-ring ping-ring--inactive"></div>
           </div>
-          <span id="statusText" class="status-text status-text--inactive">Prüfe…</span>
+          <span id="statusText" class="status-text status-text--inactive" data-i18n="status_checking">Checking…</span>
         </div>
 
         <!-- Session stats -->
         <div class="section">
-          <div class="section-label">Heutige Aktivität</div>
+          <div class="section-label" data-i18n="section_today">Today's Activity</div>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-number stat-number--total" id="statTotal">0</div>
-              <div class="stat-label">Erkannt</div>
+              <div class="stat-label" data-i18n="stat_detected">Detected</div>
             </div>
             <div class="stat-card">
               <div class="stat-number stat-number--blocked" id="statBlocked">0</div>
-              <div class="stat-label">Blockiert</div>
+              <div class="stat-label" data-i18n="stat_blocked">Blocked</div>
             </div>
             <div class="stat-card">
               <div class="stat-number stat-number--override" id="statOverride">0</div>
-              <div class="stat-label">Override</div>
+              <div class="stat-label" data-i18n="stat_override">Override</div>
             </div>
           </div>
         </div>
 
         <!-- Current page -->
         <div class="section">
-          <div class="section-label">Aktuelle Seite</div>
+          <div class="section-label" data-i18n="section_current_page">Current Page</div>
           <div class="info-card">
             <div class="info-row">
-              <span class="info-label">KI-Tool</span>
+              <span class="info-label" data-i18n="info_ai_tool">AI Tool</span>
               <span
                 id="currentTool"
                 style="font-size: 12.5px; font-weight: 600; color: var(--text-1)"
@@ -981,31 +984,43 @@
               >
             </div>
             <div class="info-row">
-              <span class="info-label">Schutz</span>
-              <span id="protectionBadge" class="badge badge--na">N/A</span>
+              <span class="info-label" data-i18n="info_protection">Protection</span>
+              <span id="protectionBadge" class="badge badge--na" data-i18n="badge_na">N/A</span>
             </div>
           </div>
         </div>
 
         <!-- Recent detections -->
         <div class="section" id="activitySection">
-          <div class="section-label">Letzte Erkennungen</div>
+          <div class="section-label" data-i18n="section_recent">Recent Detections</div>
           <div id="activityList"></div>
         </div>
 
         <!-- Connect form (when not authenticated) -->
         <div id="connectSection" class="section" style="display: none">
-          <div class="section-label">Optional: Enterprise-Dashboard verbinden</div>
+          <div class="section-label" data-i18n="section_connect">
+            Optional: Connect enterprise dashboard
+          </div>
           <input
             class="connect-field"
             type="text"
             id="serverUrl"
-            placeholder="Dashboard URL (z. B. http://localhost:3000)"
+            data-i18n-placeholder="input_url_placeholder"
+            placeholder="Dashboard URL (e.g. http://localhost:3000)"
           />
-          <input class="connect-field" type="password" id="tokenInput" placeholder="Auth Token" />
-          <button class="connect-btn" id="connectBtn">Verbinden</button>
-          <div style="font-size: 11px; color: var(--text-3); margin-top: 6px; line-height: 1.4">
-            Nicht nötig im Standalone-Modus — die Extension funktioniert ohne Dashboard.
+          <input
+            class="connect-field"
+            type="password"
+            id="tokenInput"
+            data-i18n-placeholder="input_token_placeholder"
+            placeholder="Auth Token"
+          />
+          <button class="connect-btn" id="connectBtn" data-i18n="btn_connect">Connect</button>
+          <div
+            style="font-size: 11px; color: var(--text-3); margin-top: 6px; line-height: 1.4"
+            data-i18n="connect_standalone_hint"
+          >
+            Not required in standalone mode — the extension works without a dashboard.
           </div>
         </div>
 
@@ -1025,7 +1040,7 @@
               <rect x="3" y="14" width="7" height="7" rx="1" />
               <rect x="14" y="14" width="7" height="7" rx="1" />
             </svg>
-            Dashboard öffnen
+            <span data-i18n="btn_open_dashboard">Open Dashboard</span>
           </button>
         </div>
       </div>
@@ -1035,14 +1050,20 @@
       <div class="tab-panel" id="tabPrompts">
         <!-- Company prompts -->
         <div class="section" id="companyPromptsSection">
-          <div class="section-label">Unternehmens-Bibliothek</div>
+          <div class="section-label" data-i18n="section_company_library">Company Library</div>
           <div id="companyPromptsList"></div>
         </div>
 
         <!-- Personal prompts -->
         <div class="section">
           <div class="prompt-section-header">
-            <div class="section-label" style="margin-bottom: 0">Meine Prompts</div>
+            <div
+              class="section-label"
+              style="margin-bottom: 0"
+              data-i18n="section_my_prompts"
+            >
+              My Prompts
+            </div>
             <button class="prompt-add-btn" id="addPromptBtn">
               <svg
                 width="10"
@@ -1057,28 +1078,34 @@
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
-              Neu
+              <span data-i18n="btn_new">New</span>
             </button>
           </div>
 
           <!-- Inline add/edit form (hidden by default) -->
           <div class="prompt-form" id="promptForm" style="display: none">
-            <div class="prompt-form-title" id="promptFormTitle">Neuer Prompt</div>
+            <div class="prompt-form-title" id="promptFormTitle" data-i18n="prompt_form_new">
+              New Prompt
+            </div>
             <input
               class="prompt-field"
               type="text"
               id="promptTitleInput"
-              placeholder="Titel (z. B. 'Code Review Checkliste')"
+              data-i18n-placeholder="prompt_title_placeholder"
+              placeholder="Title (e.g. 'Code Review Checklist')"
             />
             <textarea
               class="prompt-field"
               id="promptContentInput"
-              placeholder="Prompt-Text…"
+              data-i18n-placeholder="prompt_content_placeholder"
+              placeholder="Prompt text…"
               rows="4"
             ></textarea>
             <div class="prompt-form-actions">
-              <button class="prompt-save-btn" id="promptSaveBtn">Speichern</button>
-              <button class="prompt-cancel-btn" id="promptCancelBtn">Abbrechen</button>
+              <button class="prompt-save-btn" id="promptSaveBtn" data-i18n="btn_save">Save</button>
+              <button class="prompt-cancel-btn" id="promptCancelBtn" data-i18n="btn_cancel">
+                Cancel
+              </button>
             </div>
           </div>
 
@@ -1101,7 +1128,7 @@
         >
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        Privacy-first KI-Governance
+        <span data-i18n="footer_tagline">Privacy-first AI Governance</span>
       </div>
     </div>
 
