@@ -12,6 +12,7 @@ Source: [packages/detection-engine/src](../packages/detection-engine/src)
 | `phone`          | International formats                                 | 30           |
 | `iban`           | EU IBAN with checksum                                 | 70           |
 | `credit_card`    | Luhn-validated, test cards filtered                   | 80           |
+| `swift_bic`      | SWIFT / BIC bank identification codes (8 or 11 chars)  | 55           |
 | `address`        | Generic + German format                               | 50           |
 | `employee_id`    | Pattern-based                                         | 40           |
 | `customer_id`    | Pattern-based                                         | 35           |

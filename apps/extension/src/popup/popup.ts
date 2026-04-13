@@ -13,6 +13,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   phone: "Telefonnummer",
   iban: "IBAN",
   credit_card: "Kreditkarte",
+  swift_bic: "SWIFT / BIC",
   address: "Postanschrift",
   customer_id: "Kunden- / Bestell-ID",
   employee_id: "Mitarbeiter-ID",

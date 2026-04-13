@@ -96,6 +96,28 @@ describe("Detection Engine", () => {
     });
   });
 
+  describe("SWIFT/BIC detection", () => {
+    it("detects 8-character SWIFT/BIC codes", () => {
+      const result = detect("Bank code: DEUTDEFF");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("detects 11-character SWIFT/BIC codes with branch", () => {
+      const result = detect("SWIFT: DEUTDEFF500");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("detects SWIFT/BIC in full bank wire details", () => {
+      const result = detect("Recipient bank: INGBNL2AXXX");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("does not flag ordinary text as SWIFT/BIC", () => {
+      const result = detect("The meeting is scheduled for tomorrow at 2pm.");
+      expect(result.categories).not.toContain("swift_bic");
+    });
+  });
+
   describe("Custom patterns", () => {
     it("detects custom regex patterns", () => {
       const result = detect("Project ALPHA-2025 is confidential", [

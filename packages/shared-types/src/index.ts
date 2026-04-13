@@ -9,6 +9,7 @@ export type DetectionCategory =
   | "phone"
   | "iban"
   | "credit_card"
+  | "swift_bic"
   | "address"
   | "customer_id"
   | "employee_id"

@@ -129,6 +129,17 @@ const creditCardRule: DetectionRule = {
   validate: validateCreditCard,
 };
 
+// --- SWIFT / BIC ---
+const swiftBicRule: DetectionRule = {
+  id: "swift-bic",
+  category: "swift_bic",
+  name: "SWIFT / BIC Code",
+  // 8 chars: AAAA BB CC DD  (bank, country, location, branch)
+  // 11 chars: AAAA BB CC DDD (bank, country, location, branch)
+  pattern: /\b[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?\b/g,
+  severity: 55,
+};
+
 // --- Secrets / API Keys ---
 const secretRules: DetectionRule[] = [
   {
@@ -311,6 +322,7 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   phoneRule,
   ibanRule,
   creditCardRule,
+  swiftBicRule,
   ...secretRules,
   ...contextualRules,
   addressRule,
