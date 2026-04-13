@@ -1,7 +1,7 @@
 {
   "name": "ai-compliance-copilot",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Browser extension that stops sensitive data from leaking into ChatGPT, Claude, Gemini, and Perplexity",
   "license": "MIT",
   "author": "Lennard Geißler",
