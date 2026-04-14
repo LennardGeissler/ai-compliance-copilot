@@ -4,7 +4,12 @@ export class PerplexityAdapter extends BaseAdapter {
   id = "perplexity";
 
   matches(url: string): boolean {
-    return url.includes("perplexity.ai");
+    try {
+      const host = new URL(url).hostname;
+      return host === "perplexity.ai" || host.endsWith(".perplexity.ai");
+    } catch {
+      return false;
+    }
   }
 
   findInputElement(): HTMLElement | null {
