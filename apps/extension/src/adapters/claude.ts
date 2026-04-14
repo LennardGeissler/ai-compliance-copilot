@@ -4,7 +4,12 @@ export class ClaudeAdapter extends BaseAdapter {
   id = "claude";
 
   matches(url: string): boolean {
-    return url.includes("claude.ai");
+    try {
+      const host = new URL(url).hostname;
+      return host === "claude.ai" || host.endsWith(".claude.ai");
+    } catch {
+      return false;
+    }
   }
 
   findInputElement(): HTMLElement | null {

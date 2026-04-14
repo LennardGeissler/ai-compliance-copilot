@@ -37,7 +37,7 @@ Load the extension in Chrome: `chrome://extensions` → "Load unpacked" → sele
 - **Detection rules** — additional PII/secret patterns, locale-specific identifiers. See [packages/detection-engine](packages/detection-engine).
 - **LLM platform support** — DOM adapters for new chat UIs. See [apps/extension/src/content](apps/extension/src/content).
 - **False-positive reports** — open an issue with the `false-positive` template; realistic samples are gold.
-- **Translations** — UI strings in the extension.
+- **Translations** — UI strings in the extension. See [Adding a translation](#adding-a-translation).
 - **Documentation** — especially `docs/threat-model.md` and integration guides.
 
 ## What we don't accept
@@ -45,6 +45,21 @@ Load the extension in Chrome: `chrome://extensions` → "Load unpacked" → sele
 - Changes that weaken privacy guarantees (e.g. sending prompt content to third parties by default).
 - Detection rules without tests.
 - Refactors bundled with feature changes.
+
+## Adding a translation
+
+The extension uses [`chrome.i18n`](https://developer.chrome.com/docs/extensions/reference/api/i18n). Locales live under [apps/extension/public/\_locales/](apps/extension/public/_locales/). English (`en`) is the source of truth and the `default_locale` declared in `manifest.json`; the browser UI language picks the active locale, falling back to English.
+
+To add a new language (e.g. French, `fr`):
+
+1. Copy `apps/extension/public/_locales/en/messages.json` to `apps/extension/public/_locales/fr/messages.json`.
+2. Translate every `message` value. Keep the keys and any HTML tags (e.g. `<strong>`) intact.
+3. If you add a new UI string:
+   - Add the key to **every** existing locale (at minimum `en` and `de`).
+   - In code, use `t("your_key")` from [`apps/extension/src/i18n.ts`](apps/extension/src/i18n.ts); for static HTML, add `data-i18n="your_key"` (or `data-i18n-placeholder` / `data-i18n-title`).
+4. `pnpm --filter ai-compliance-copilot-extension build`, then reload the unpacked extension and switch your browser UI language to verify.
+
+Brand names (ChatGPT, Claude, Gemini, Perplexity) are intentionally not translated.
 
 ## Getting help
 

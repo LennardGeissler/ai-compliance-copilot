@@ -1,5 +1,6 @@
 import type { PolicyAction, DetectionCategory, DetectionMatch } from "@ai-compliance/shared-types";
 import { buildRedactedText } from "@ai-compliance/detection-engine";
+import { t } from "../i18n";
 
 export interface OverlayOptions {
   action: PolicyAction;
@@ -21,73 +22,27 @@ export interface OverlayOptions {
 
 // ── Labels ──────────────────────────────────────────────────────────────────
 
-const CATEGORY_LABELS: Record<string, string> = {
-  email: "E-Mail-Adresse",
-  phone: "Telefonnummer",
-  iban: "IBAN",
-  credit_card: "Kreditkarte",
-  address: "Postanschrift",
-  customer_id: "Kunden- / Bestell-ID",
-  employee_id: "Mitarbeiter-ID",
-  secret: "Secret / API-Schlüssel",
-  hr_data: "HR-Daten",
-  custom_keyword: "Gesperrtes Schlüsselwort",
-};
+const CATEGORY_KEYS = new Set([
+  "email",
+  "phone",
+  "iban",
+  "credit_card",
+  "address",
+  "customer_id",
+  "employee_id",
+  "secret",
+  "hr_data",
+  "custom_keyword",
+]);
 
-// ── Per-category explanations (risk + concrete action) ───────────────────────
+function categoryLabel(cat: string): string {
+  return t(`category_${cat}`);
+}
 
-const CATEGORY_EXPLANATIONS: Record<string, { risk: string; action: string }> = {
-  email: {
-    risk: "E-Mail-Adressen sind personenbezogene Daten gemäß DSGVO Art. 4 und dürfen ohne Rechtsgrundlage nicht an externe KI-Dienste übermittelt werden.",
-    action:
-      "Ersetze die Adresse durch eine neutrale Formulierung wie 'der betreffende Nutzer' oder 'Kollege XY' — ohne echte Mailadresse.",
-  },
-  phone: {
-    risk: "Telefonnummern ermöglichen die direkte Identifizierung von Personen und unterliegen dem Datenschutz.",
-    action:
-      "Entferne die Nummer oder ersetze sie durch '[Telefonnummer]'. Beschreibe den Sachverhalt ohne konkrete Ziffernfolge.",
-  },
-  iban: {
-    risk: "IBAN-Nummern sind Bankdaten der höchsten Schutzklasse. Ihre unerlaubte Weitergabe kann zivil- und strafrechtliche Folgen haben.",
-    action:
-      "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer.",
-  },
-  credit_card: {
-    risk: "Kreditkartendaten fallen unter PCI-DSS-Compliance-Pflichten. Ihre Übermittlung an externe Dienste ist untersagt.",
-    action:
-      "Entferne die Kartennummer. Beschreibe das Problem mit 'die Zahlungsmethode' ohne konkrete Ziffern.",
-  },
-  address: {
-    risk: "Postanschriften ermöglichen die physische Lokalisierung von Personen und sind nach DSGVO schützenswerte Daten.",
-    action:
-      "Ersetze die Adresse durch 'Adresse des Kunden' oder 'Lieferadresse' — ohne Straße, PLZ und Ort.",
-  },
-  customer_id: {
-    risk: "Kunden- und Bestellnummern können genutzt werden, um Personen zu identifizieren oder Daten zu verknüpfen.",
-    action:
-      "Pseudonymisiere die ID (z. B. 'Kunde A', 'Bestellung #XYZ') oder beschreibe den Fall ohne echte Referenznummer.",
-  },
-  employee_id: {
-    risk: "Mitarbeiternummern sind interne Identifikatoren und dürfen nicht an externe Dienste weitergegeben werden.",
-    action:
-      "Ersetze die Nummer durch eine Rollenbeschreibung wie 'der betreffende Mitarbeiter' oder 'Kollege aus Team X'.",
-  },
-  secret: {
-    risk: "API-Schlüssel, Passwörter und Tokens gewähren Zugriff auf Systeme. Eine Kompromittierung kann zu schwerwiegenden Sicherheitsvorfällen führen.",
-    action:
-      "Entferne den Secret sofort und rotiere ihn in deinem System. Beschreibe das Problem ohne konkrete Credentials.",
-  },
-  hr_data: {
-    risk: "Gehaltsdaten, Sozialversicherungsnummern und andere HR-Informationen sind besonders sensible Daten gemäß DSGVO Art. 9.",
-    action:
-      "Ersetze konkrete HR-Daten durch Allgemeinbeschreibungen ('Gehaltsbereich', 'betreffende Person') ohne echte Werte.",
-  },
-  custom_keyword: {
-    risk: "Dieser Begriff wurde durch die Compliance-Richtlinien deiner Organisation als vertraulich eingestuft.",
-    action:
-      "Entferne oder umschreibe den markierten Begriff entsprechend eurer internen Kommunikationsrichtlinien.",
-  },
-};
+function categoryExplanation(cat: string): { risk: string; action: string } | null {
+  if (!CATEGORY_KEYS.has(cat)) return null;
+  return { risk: t(`category_${cat}_risk`), action: t(`category_${cat}_action`) };
+}
 
 // ── Category icons (Lucide-style inline SVG) ────────────────────────────────
 
@@ -218,19 +173,17 @@ export function showOverlay(options: OverlayOptions): void {
   const isBlock = options.action === "block";
   const variant = isBlock ? "block" : "warn";
 
-  const title = isBlock ? "Übertragung blockiert" : "Sensible Daten erkannt";
-  const risk = isBlock ? "Kritisches Risiko" : "Hohes Risiko";
+  const title = isBlock ? t("overlay_title_blocked") : t("overlay_title_warning");
+  const risk = isBlock ? t("overlay_risk_critical") : t("overlay_risk_high");
   const message =
     options.userMessage ??
-    (isBlock
-      ? "Diese Nachricht enthält gesperrte Daten und kann gemäß den Compliance-Richtlinien deiner Organisation nicht gesendet werden."
-      : "Deine Nachricht enthält potenziell sensible Informationen. Bitte prüfe sie sorgfältig, bevor du fortfährst.");
+    (isBlock ? t("overlay_default_block_message") : t("overlay_default_warn_message"));
 
   // Category tags
   const categoryTags = options.categories
     .map((cat) => {
       const icon = CATEGORY_ICONS[cat] ?? FALLBACK_ICON;
-      const label = escapeHtml(CATEGORY_LABELS[cat] ?? cat);
+      const label = escapeHtml(categoryLabel(cat));
       return `<span class="acc-overlay-tag">${icon}${label}</span>`;
     })
     .join("");
@@ -240,14 +193,14 @@ export function showOverlay(options: OverlayOptions): void {
     ? `
     <div class="acc-overlay-reasons">
       <button class="acc-overlay-reasons-toggle" aria-expanded="false" id="acc-reasons-toggle">
-        Warum wurde das blockiert?
+        ${escapeHtml(t("overlay_why_blocked"))}
         ${ICON_CHEVRON}
       </button>
       <div class="acc-overlay-reasons-body" id="acc-reasons-body">
         ${options.categories
           .map((cat) => {
-            const exp = CATEGORY_EXPLANATIONS[cat];
-            const label = escapeHtml(CATEGORY_LABELS[cat] ?? cat);
+            const exp = categoryExplanation(cat);
+            const label = escapeHtml(categoryLabel(cat));
             const icon = CATEGORY_ICONS[cat] ?? FALLBACK_ICON;
             if (!exp) return "";
             return `
@@ -258,7 +211,7 @@ export function showOverlay(options: OverlayOptions): void {
               </div>
               <p class="acc-overlay-explanation-risk">${escapeHtml(exp.risk)}</p>
               <div class="acc-overlay-explanation-action">
-                <span class="acc-overlay-explanation-action-label">Empfehlung</span>
+                <span class="acc-overlay-explanation-action-label">${escapeHtml(t("overlay_recommendation_label"))}</span>
                 ${escapeHtml(exp.action)}
               </div>
             </div>`;
@@ -268,7 +221,7 @@ export function showOverlay(options: OverlayOptions): void {
           options.reasons.length
             ? `
           <div class="acc-overlay-policy-reasons">
-            <span class="acc-overlay-policy-reasons-label">Ausgelöste Richtlinien</span>
+            <span class="acc-overlay-policy-reasons-label">${escapeHtml(t("overlay_triggered_policies"))}</span>
             <ul>${options.reasons.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>
           </div>`
             : ""
@@ -282,13 +235,12 @@ export function showOverlay(options: OverlayOptions): void {
   const redactSectionHtml = canRedact
     ? `
     <div class="acc-overlay-redact" id="acc-overlay-redact" style="display:none;">
-      <div class="acc-overlay-section-label">Bereinigte Version</div>
+      <div class="acc-overlay-section-label">${escapeHtml(t("overlay_redact_section_label"))}</div>
       <p class="acc-overlay-redact-hint">
-        Sensible Stellen wurden durch Platzhalter ersetzt.
-        Du kannst den Text noch anpassen, bevor du ihn sendest.
+        ${escapeHtml(t("overlay_redact_hint"))}
       </p>
       <textarea class="acc-overlay-redact-textarea" id="acc-overlay-redact-text" rows="5"
-        aria-label="Bereinigter Text"></textarea>
+        aria-label="${escapeHtml(t("overlay_redact_textarea_aria"))}"></textarea>
     </div>`
     : "";
 
@@ -297,11 +249,11 @@ export function showOverlay(options: OverlayOptions): void {
     ? `
     <button class="acc-overlay-btn acc-overlay-btn--redact" id="acc-overlay-anonymize">
       ${ICON_WAND}
-      Text anonymisieren
+      ${escapeHtml(t("overlay_btn_anonymize"))}
     </button>
     <button class="acc-overlay-btn acc-overlay-btn--send-redacted" id="acc-overlay-send-redacted"
       style="display:none;">
-      Bereinigt senden
+      ${escapeHtml(t("overlay_btn_send_redacted"))}
     </button>`
     : "";
 
@@ -311,20 +263,20 @@ export function showOverlay(options: OverlayOptions): void {
     ${redactBtnsHtml}
     <div class="acc-overlay-actions-row">
       <button class="acc-overlay-btn acc-overlay-btn--block" id="acc-overlay-back">
-        Zurück &amp; Bearbeiten
+        ${escapeHtml(t("overlay_btn_back"))}
       </button>
       <button class="acc-overlay-btn acc-overlay-btn--override" id="acc-overlay-continue">
-        Override &amp; senden
+        ${escapeHtml(t("overlay_btn_override_send"))}
       </button>
     </div>`
     : `
     ${redactBtnsHtml}
     <div class="acc-overlay-actions-row">
       <button class="acc-overlay-btn acc-overlay-btn--secondary" id="acc-overlay-back">
-        Zurück &amp; Bearbeiten
+        ${escapeHtml(t("overlay_btn_back"))}
       </button>
       <button class="acc-overlay-btn acc-overlay-btn--warn" id="acc-overlay-continue">
-        Trotzdem senden
+        ${escapeHtml(t("overlay_btn_send_anyway"))}
       </button>
     </div>`;
 
@@ -360,7 +312,7 @@ export function showOverlay(options: OverlayOptions): void {
         ${
           categoryTags
             ? `
-          <div class="acc-overlay-section-label">Erkannte Daten</div>
+          <div class="acc-overlay-section-label">${escapeHtml(t("overlay_section_detected_data"))}</div>
           <div class="acc-overlay-categories">${categoryTags}</div>
         `
             : ""

@@ -4,7 +4,17 @@ export class ChatGPTAdapter extends BaseAdapter {
   id = "chatgpt";
 
   matches(url: string): boolean {
-    return url.includes("chatgpt.com") || url.includes("chat.openai.com");
+    try {
+      const host = new URL(url).hostname;
+      return (
+        host === "chatgpt.com" ||
+        host.endsWith(".chatgpt.com") ||
+        host === "chat.openai.com" ||
+        host.endsWith(".chat.openai.com")
+      );
+    } catch {
+      return false;
+    }
   }
 
   findInputElement(): HTMLElement | null {

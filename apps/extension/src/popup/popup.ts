@@ -1,5 +1,6 @@
 import { SUPPORTED_TOOLS } from "@ai-compliance/shared-types";
 import type { Prompt } from "@ai-compliance/shared-types";
+import { t, hydrateI18n } from "../i18n";
 
 const TOOL_LABELS: Record<string, string> = {
   chatgpt: "ChatGPT",
@@ -8,18 +9,9 @@ const TOOL_LABELS: Record<string, string> = {
   perplexity: "Perplexity",
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  email: "E-Mail-Adresse",
-  phone: "Telefonnummer",
-  iban: "IBAN",
-  credit_card: "Kreditkarte",
-  address: "Postanschrift",
-  customer_id: "Kunden- / Bestell-ID",
-  employee_id: "Mitarbeiter-ID",
-  secret: "Secret / API-Schlüssel",
-  hr_data: "HR-Daten",
-  custom_keyword: "Gesperrtes Schlüsselwort",
-};
+function categoryLabel(cat: string): string {
+  return t(`category_${cat}`);
+}
 
 interface Detection {
   categories: string[];
@@ -44,6 +36,7 @@ let editingPromptCreatedAt: string = "";
 // ── Init ─────────────────────────────────────────────────────────────────────
 
 async function init() {
+  hydrateI18n();
   initTabs();
   await initTheme();
 
@@ -85,10 +78,10 @@ async function init() {
              stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
-        Aktiv
+        ${escHtml(t("badge_active"))}
       `;
     } else {
-      toolEl.textContent = "Kein KI-Tool";
+      toolEl.textContent = t("current_tool_none");
     }
   });
 
@@ -159,9 +152,7 @@ function setStatus(connected: boolean) {
   dot.className = `ping-dot  ping-dot--${state}`;
   ring.className = `ping-ring ping-ring--${state}`;
   text.className = `status-text status-text--${state}`;
-  text.textContent = connected
-    ? "Verbunden & Geschützt"
-    : "Nicht verbunden — Standard-Einstellungen";
+  text.textContent = connected ? t("status_connected") : t("status_disconnected");
 }
 
 function renderStats(stats: Stats) {
@@ -182,7 +173,7 @@ function renderActivity(detections: Detection[]) {
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           <polyline points="9 12 11 14 15 10"/>
         </svg>
-        <div class="empty-state-text">Noch keine Erkennungen.<br>Deine Sitzung ist sauber.</div>
+        <div class="empty-state-text">${escHtml(t("empty_no_detections"))}<br>${escHtml(t("empty_session_clean"))}</div>
       </div>`;
     return;
   }
@@ -194,7 +185,7 @@ function renderActivity(detections: Detection[]) {
 }
 
 function renderItem(d: Detection): string {
-  const cats = d.categories.map((c) => CATEGORY_LABELS[c] ?? c).join(", ");
+  const cats = d.categories.map((c) => categoryLabel(c)).join(", ");
 
   const toolLabel = TOOL_LABELS[d.toolId] ?? d.toolId;
   const age = timeAgo(d.timestamp);
@@ -229,9 +220,9 @@ function actionBadgeClass(action: string): string {
 }
 
 function actionText(action: string): string {
-  if (action === "block") return "Blockiert";
-  if (action === "allow_after_warning") return "Override";
-  return "Warnung";
+  if (action === "block") return t("action_blocked");
+  if (action === "allow_after_warning") return t("action_override");
+  return t("action_warning");
 }
 
 function timeAgo(iso: string): string {
@@ -291,8 +282,8 @@ function renderPersonalPrompts(prompts: Prompt[]) {
   if (prompts.length === 0) {
     container.innerHTML = `
       <div class="prompt-empty">
-        Noch keine eigenen Prompts gespeichert.<br>
-        Klicke auf <strong>Neu</strong>, um deinen ersten Prompt anzulegen.
+        ${escHtml(t("prompts_empty_line1"))}<br>
+        ${t("prompts_empty_line2")}
       </div>`;
     return;
   }
@@ -311,16 +302,19 @@ function renderPersonalPrompts(prompts: Prompt[]) {
 
 function renderPromptCard(p: Prompt, personal: boolean): string {
   const preview = escHtml(p.content.length > 80 ? p.content.slice(0, 80) + "…" : p.content);
+  const useLabel = escHtml(t("btn_use"));
+  const editTitle = escHtml(t("btn_edit_title"));
+  const deleteTitle = escHtml(t("btn_delete_title"));
   const controls = personal
-    ? `<button class="prompt-use-btn"    id="use-${escHtml(p.id)}">Verwenden</button>
-       <button class="prompt-delete-btn" id="edit-${escHtml(p.id)}" title="Bearbeiten">
+    ? `<button class="prompt-use-btn"    id="use-${escHtml(p.id)}">${useLabel}</button>
+       <button class="prompt-delete-btn" id="edit-${escHtml(p.id)}" title="${editTitle}">
          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
          </svg>
        </button>
-       <button class="prompt-delete-btn" id="delete-${escHtml(p.id)}" title="Löschen">
+       <button class="prompt-delete-btn" id="delete-${escHtml(p.id)}" title="${deleteTitle}">
          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
            <polyline points="3 6 5 6 21 6"/>
@@ -329,9 +323,11 @@ function renderPromptCard(p: Prompt, personal: boolean): string {
            <path d="M9 6V4h6v2"/>
          </svg>
        </button>`
-    : `<button class="prompt-use-btn" id="use-${escHtml(p.id)}">Verwenden</button>`;
+    : `<button class="prompt-use-btn" id="use-${escHtml(p.id)}">${useLabel}</button>`;
 
-  const badge = personal ? "" : `<span class="prompt-company-badge">Unternehmen</span>`;
+  const badge = personal
+    ? ""
+    : `<span class="prompt-company-badge">${escHtml(t("badge_company"))}</span>`;
 
   return `
     <div class="prompt-card" id="card-${escHtml(p.id)}">
@@ -361,7 +357,7 @@ function deletePrompt(id: string) {
 
 function openNewPromptForm() {
   editingPromptId = null;
-  (document.getElementById("promptFormTitle") as HTMLElement).textContent = "Neuer Prompt";
+  (document.getElementById("promptFormTitle") as HTMLElement).textContent = t("prompt_form_new");
   (document.getElementById("promptTitleInput") as HTMLInputElement).value = "";
   (document.getElementById("promptContentInput") as HTMLTextAreaElement).value = "";
   document.getElementById("promptForm")!.style.display = "block";
@@ -371,7 +367,7 @@ function openNewPromptForm() {
 function openEditPromptForm(p: Prompt) {
   editingPromptId = p.id;
   editingPromptCreatedAt = p.createdAt;
-  (document.getElementById("promptFormTitle") as HTMLElement).textContent = "Prompt bearbeiten";
+  (document.getElementById("promptFormTitle") as HTMLElement).textContent = t("prompt_form_edit");
   (document.getElementById("promptTitleInput") as HTMLInputElement).value = p.title;
   (document.getElementById("promptContentInput") as HTMLTextAreaElement).value = p.content;
   document.getElementById("promptForm")!.style.display = "block";

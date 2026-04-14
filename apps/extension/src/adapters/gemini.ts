@@ -4,7 +4,12 @@ export class GeminiAdapter extends BaseAdapter {
   id = "gemini";
 
   matches(url: string): boolean {
-    return url.includes("gemini.google.com");
+    try {
+      const host = new URL(url).hostname;
+      return host === "gemini.google.com" || host.endsWith(".gemini.google.com");
+    } catch {
+      return false;
+    }
   }
 
   findInputElement(): HTMLElement | null {

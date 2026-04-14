@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   release:
     name: Build, Release & Publish
@@ -49,10 +52,18 @@ jobs:
         run: pnpm test
 
       # ── Versioning ────────────────────────────────────────────────────────
-      - name: Bump patch version
+      # If the triggering commit contains [skip bump] (e.g. a release/*
+      # branch that already set the target version in package.json), we
+      # tag the current version instead of incrementing the patch.
+      - name: Resolve release version
         id: version
         run: |
-          node scripts/bump-version.js
+          if [[ "${{ github.event.head_commit.message }}" == *"[skip bump]"* ]]; then
+            echo "bumped=false" >> $GITHUB_OUTPUT
+          else
+            node scripts/bump-version.js
+            echo "bumped=true" >> $GITHUB_OUTPUT
+          fi
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -60,13 +71,16 @@ jobs:
         run: |
           git config user.name  "release-bot[bot]"
           git config user.email "release-bot[bot]@users.noreply.github.com"
-          git add \
-            package.json \
-            apps/extension/package.json \
-            packages/detection-engine/package.json \
-            packages/policy-engine/package.json \
-            packages/shared-types/package.json
-          git commit -m "chore: release v${{ steps.version.outputs.version }} [skip ci]"
+          if [[ "${{ steps.version.outputs.bumped }}" == "true" ]]; then
+            git add \
+              package.json \
+              apps/extension/package.json \
+              packages/detection-engine/package.json \
+              packages/policy-engine/package.json \
+              packages/shared-types/package.json \
+              apps/extension/public/manifest.json
+            git commit -m "chore: release v${{ steps.version.outputs.version }} [skip ci]"
+          fi
           git tag "v${{ steps.version.outputs.version }}"
           git push origin main --follow-tags
 

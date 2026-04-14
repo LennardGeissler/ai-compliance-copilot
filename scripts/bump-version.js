@@ -17,23 +17,32 @@ const rootPkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 const [major, minor, patch] = rootPkg.version.split(".").map(Number);
 const newVersion = `${major}.${minor}.${patch + 1}`;
 
+function readIfPresent(file) {
+  try {
+    return fs.readFileSync(file, "utf8");
+  } catch (err) {
+    if (err.code === "ENOENT") return null;
+    throw err;
+  }
+}
+
 for (const rel of PACKAGES) {
   const full = path.resolve(rel);
-  if (!fs.existsSync(full)) {
+  const raw = readIfPresent(full);
+  if (raw === null) {
     console.warn(`Skipping missing file: ${rel}`);
     continue;
   }
-  const pkg = JSON.parse(fs.readFileSync(full, "utf8"));
+  const pkg = JSON.parse(raw);
   pkg.version = newVersion;
   fs.writeFileSync(full, JSON.stringify(pkg, null, 2) + "\n");
   console.log(`  ${rel}  →  ${newVersion}`);
 }
 
-// Keep the extension manifest in sync — it's the version shown in the browser
-// and required for Chrome Web Store updates.
 const manifestPath = "apps/extension/public/manifest.json";
-if (fs.existsSync(manifestPath)) {
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const manifestRaw = readIfPresent(manifestPath);
+if (manifestRaw !== null) {
+  const manifest = JSON.parse(manifestRaw);
   manifest.version = newVersion;
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
   console.log(`  ${manifestPath}  →  ${newVersion}`);
