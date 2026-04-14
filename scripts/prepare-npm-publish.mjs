@@ -7,15 +7,15 @@
 // inside apps/extension keeps workspace:* deps; this script strips them
 // because the published artifact is a self-contained, prebuilt bundle.
 
-import { cpSync, mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs';
-import { readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { cpSync, mkdirSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const outDir = resolve(repoRoot, '.release-publish');
-const extDir = resolve(repoRoot, 'apps/extension');
-const distDir = resolve(extDir, 'dist');
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const outDir = resolve(repoRoot, ".release-publish");
+const extDir = resolve(repoRoot, "apps/extension");
+const distDir = resolve(extDir, "dist");
 
 if (!existsSync(distDir)) {
   console.error(`Missing build output: ${distDir}. Run pnpm build first.`);
@@ -25,18 +25,18 @@ if (!existsSync(distDir)) {
 rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 
-cpSync(distDir, resolve(outDir, 'dist'), { recursive: true });
+cpSync(distDir, resolve(outDir, "dist"), { recursive: true });
 
-for (const file of ['README.md', 'LICENSE']) {
+for (const file of ["README.md", "LICENSE"]) {
   const src = resolve(repoRoot, file);
   if (existsSync(src)) cpSync(src, resolve(outDir, file));
 }
 
-const src = JSON.parse(readFileSync(resolve(extDir, 'package.json'), 'utf8'));
+const src = JSON.parse(readFileSync(resolve(extDir, "package.json"), "utf8"));
 const version = process.env.VERSION || src.version;
 
 const slim = {
-  name: '@lennardgeissler/ai-compliance-copilot-extension',
+  name: "@lennardgeissler/ai-compliance-copilot-extension",
   version,
   description: src.description,
   license: src.license,
@@ -45,16 +45,13 @@ const slim = {
   homepage: src.homepage,
   bugs: src.bugs,
   keywords: src.keywords,
-  files: ['dist/**', 'README.md', 'LICENSE'],
+  files: ["dist/**", "README.md", "LICENSE"],
   publishConfig: {
-    registry: 'https://npm.pkg.github.com',
-    access: 'restricted',
+    registry: "https://npm.pkg.github.com",
+    access: "restricted",
   },
 };
 
-writeFileSync(
-  resolve(outDir, 'package.json'),
-  JSON.stringify(slim, null, 2) + '\n',
-);
+writeFileSync(resolve(outDir, "package.json"), JSON.stringify(slim, null, 2) + "\n");
 
 console.log(`Prepared ${outDir} for npm publish (v${version})`);
