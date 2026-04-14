@@ -12,12 +12,24 @@ import { getAdapterForUrl } from "./adapters";
 import { showOverlay } from "./overlay/overlay";
 
 const CLIENT_VERSION = "0.1.0";
+const CONFIG_LOAD_TIMEOUT_MS = 3000;
+
+const FALLBACK_CONFIG: ExtensionConfig = {
+  policies: [],
+  customPatterns: [],
+  settings: {
+    storeRedactedPreview: false,
+    enabledTools: ["chatgpt", "claude", "gemini", "perplexity"],
+  },
+};
 
 let config: ExtensionConfig | null = null;
 /** Module-level adapter reference — needed to set input text for redacted sends. */
 let currentAdapter: SiteAdapter | null = null;
 /** Current UI theme, read from storage once on init. */
 let currentTheme: "light" | "dark" = "dark";
+/** True once init() has completed — gates handlers that depend on adapter/config. */
+let isInitialized = false;
 
 /**
  * Initialize the content script.
@@ -49,25 +61,19 @@ async function init() {
   };
 
   adapter.installHooks(ctx);
+  isInitialized = true;
 }
 
 async function loadConfig(): Promise<ExtensionConfig> {
-  return new Promise((resolve) => {
+  const request = new Promise<ExtensionConfig>((resolve) => {
     chrome.runtime.sendMessage({ type: "GET_CONFIG" }, (response) => {
-      if (response?.config) {
-        resolve(response.config);
-      } else {
-        resolve({
-          policies: [],
-          customPatterns: [],
-          settings: {
-            storeRedactedPreview: false,
-            enabledTools: ["chatgpt", "claude", "gemini", "perplexity"],
-          },
-        });
-      }
+      resolve(response?.config ?? FALLBACK_CONFIG);
     });
   });
+  const timeout = new Promise<ExtensionConfig>((resolve) => {
+    setTimeout(() => resolve(FALLBACK_CONFIG), CONFIG_LOAD_TIMEOUT_MS);
+  });
+  return Promise.race([request, timeout]);
 }
 
 async function handleBeforeSend(
@@ -78,6 +84,12 @@ async function handleBeforeSend(
   action?: PolicyAction;
   result?: PolicyEvaluationResult;
 }> {
+  // Guard: if init() hasn't finished yet, adapter/config may be incomplete.
+  // Fail open (same posture as the fallback config) rather than crash.
+  if (!isInitialized || !currentAdapter) {
+    return { allowed: true };
+  }
+
   // Run detection
   const detectionResult = detect(text, config?.customPatterns ?? [], []);
 

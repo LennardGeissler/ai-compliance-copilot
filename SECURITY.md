@@ -21,6 +21,10 @@ Include:
 
 We credit reporters in the release notes unless you prefer to stay anonymous.
 
+## No Bug Bounty
+
+This project does **not** operate a paid bug bounty program. Reporters receive credit in release notes; monetary demands, invoices, or "pay-to-disclose" requests will be closed without response.
+
 ## Supported Versions
 
 Only the latest minor release receives security patches. We recommend always running the latest version.
