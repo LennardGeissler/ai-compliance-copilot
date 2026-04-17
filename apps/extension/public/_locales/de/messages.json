@@ -135,6 +135,14 @@
     "message": "Entferne oder umschreibe den markierten Begriff entsprechend eurer internen Kommunikationsrichtlinien."
   },
 
+  "category_unknown": { "message": "Sensible Daten" },
+  "category_unknown_risk": {
+    "message": "Dieser Inhalt wurde von der Compliance-Richtlinie als potenziell sensibel eingestuft."
+  },
+  "category_unknown_action": {
+    "message": "Prüfe den markierten Inhalt und entferne oder formuliere sensible Informationen um, bevor du die Nachricht sendest."
+  },
+
   "overlay_title_blocked": { "message": "Übertragung blockiert" },
   "overlay_title_warning": { "message": "Sensible Daten erkannt" },
   "overlay_risk_critical": { "message": "Kritisches Risiko" },
