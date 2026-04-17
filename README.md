@@ -167,7 +167,7 @@ pnpm workspaces + Turborepo. An optional enterprise dashboard lives in a separat
 
 ## Roadmap
 
-Tracked on the [issues tracker](https://github.com/lennardgeissler/ai-compliance-copilot/issues). Near-term themes:
+Tracked on the [public roadmap board](https://github.com/users/LennardGeissler/projects/2) and the [issues tracker](https://github.com/lennardgeissler/ai-compliance-copilot/issues). Near-term themes:
 
 - **Coverage** — file/attachment scanning ([#31](https://github.com/lennardgeissler/ai-compliance-copilot/issues/31)), entropy-based secret detection ([#32](https://github.com/lennardgeissler/ai-compliance-copilot/issues/32)), additional LLM adapters ([#33](https://github.com/lennardgeissler/ai-compliance-copilot/issues/33)).
 - **Ergonomics** — icon badge counter ([#29](https://github.com/lennardgeissler/ai-compliance-copilot/issues/29)), per-site toggle shortcut ([#30](https://github.com/lennardgeissler/ai-compliance-copilot/issues/30)), i18n ([#15](https://github.com/lennardgeissler/ai-compliance-copilot/issues/15)).
