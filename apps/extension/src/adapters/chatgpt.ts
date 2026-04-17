@@ -21,7 +21,10 @@ export class ChatGPTAdapter extends BaseAdapter {
     return (
       document.querySelector<HTMLElement>("#prompt-textarea") ??
       document.querySelector<HTMLElement>('[id="prompt-textarea"]') ??
-      document.querySelector<HTMLElement>('div[contenteditable="true"]') ??
+      // ChatGPT may use contenteditable="plaintext-only" instead of "true"
+      document.querySelector<HTMLElement>(
+        'div[contenteditable="true"], div[contenteditable="plaintext-only"]',
+      ) ??
       document.querySelector<HTMLElement>("textarea")
     );
   }
@@ -29,9 +32,16 @@ export class ChatGPTAdapter extends BaseAdapter {
   findSendButton(): HTMLElement | null {
     return (
       document.querySelector<HTMLElement>('[data-testid="send-button"]') ??
+      document.querySelector<HTMLElement>('button[data-testid="send-button"]') ??
       document.querySelector<HTMLElement>('button[aria-label*="Send"]') ??
       document.querySelector<HTMLElement>('button[aria-label*="send"]') ??
-      document.querySelector<HTMLElement>('form button[type="submit"]')
+      document.querySelector<HTMLElement>('button[aria-label*="Senden"]') ??
+      // ChatGPT's send button often wraps an SVG; walk up from known icon shapes
+      document.querySelector<HTMLElement>(
+        'form button:not([aria-label*="Voice"]):not([aria-label*="voice"]):not([aria-label*="Attach"]):not([aria-label*="attach"])[class*="btn"]',
+      ) ??
+      document.querySelector<HTMLElement>('form button[type="submit"]') ??
+      document.querySelector<HTMLElement>("form button:last-of-type")
     );
   }
 
