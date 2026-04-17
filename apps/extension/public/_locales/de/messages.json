@@ -4,7 +4,7 @@
     "message": "Erkennt und verhindert die Übertragung sensibler Daten an externe KI-Tools"
   },
 
-  "header_subtitle": { "message": "Data Protection" },
+  "header_subtitle": { "message": "Datenschutz" },
   "theme_toggle_title": { "message": "Design wechseln" },
   "tab_activity": { "message": "Aktivität" },
   "tab_prompts": { "message": "Prompt-Bibliothek" },
