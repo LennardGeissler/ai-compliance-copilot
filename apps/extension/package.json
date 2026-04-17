@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch --mode development",
-    "build": "vite build",
+    "build": "vite build && vite build --config vite.content.config.ts",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

@@ -36,11 +36,14 @@ const CATEGORY_KEYS = new Set([
 ]);
 
 function categoryLabel(cat: string): string {
+  if (!CATEGORY_KEYS.has(cat)) return t("category_unknown");
   return t(`category_${cat}`);
 }
 
-function categoryExplanation(cat: string): { risk: string; action: string } | null {
-  if (!CATEGORY_KEYS.has(cat)) return null;
+function categoryExplanation(cat: string): { risk: string; action: string } {
+  if (!CATEGORY_KEYS.has(cat)) {
+    return { risk: t("category_unknown_risk"), action: t("category_unknown_action") };
+  }
   return { risk: t(`category_${cat}_risk`), action: t(`category_${cat}_action`) };
 }
 
@@ -202,7 +205,6 @@ export function showOverlay(options: OverlayOptions): void {
             const exp = categoryExplanation(cat);
             const label = escapeHtml(categoryLabel(cat));
             const icon = CATEGORY_ICONS[cat] ?? FALLBACK_ICON;
-            if (!exp) return "";
             return `
             <div class="acc-overlay-explanation">
               <div class="acc-overlay-explanation-header">

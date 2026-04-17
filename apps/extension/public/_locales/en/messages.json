@@ -133,6 +133,14 @@
     "message": "Remove or rephrase the flagged term in line with your internal communication policies."
   },
 
+  "category_unknown": { "message": "Sensitive data" },
+  "category_unknown_risk": {
+    "message": "This content was flagged as potentially sensitive by the compliance policy."
+  },
+  "category_unknown_action": {
+    "message": "Review the flagged content and remove or rephrase any sensitive information before sending."
+  },
+
   "overlay_title_blocked": { "message": "Transmission blocked" },
   "overlay_title_warning": { "message": "Sensitive data detected" },
   "overlay_risk_critical": { "message": "Critical risk" },
