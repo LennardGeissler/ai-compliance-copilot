@@ -62,6 +62,14 @@ describe("Detection Engine", () => {
       const result = detect('password = "SuperSecret123!"');
       expect(result.categories).toContain("secret");
     });
+
+    // Tests with a real token generated from jwt.io
+    it("detects JWT tokens", () => {
+      const result = detect(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30", // gitleaks:allow
+      );
+      expect(result.categories).toContain("secret");
+    });
   });
 
   describe("HR data detection", () => {

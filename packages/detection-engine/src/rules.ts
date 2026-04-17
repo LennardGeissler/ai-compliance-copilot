@@ -167,6 +167,13 @@ const secretRules: DetectionRule[] = [
     pattern: /(?:password|passwd|pwd)\s*[:=]\s*["']?([^\s"']{8,})["']?/gi,
     severity: 80,
   },
+  {
+    id: "secret-jwt",
+    category: "secret",
+    name: "JWT Token",
+    pattern: /\beyJhbGci[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g,
+    severity: 85,
+  },
 ];
 
 // --- Address (heuristic) ---
