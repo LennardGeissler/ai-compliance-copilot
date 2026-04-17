@@ -72,6 +72,13 @@ export abstract class BaseAdapter implements SiteAdapter {
 
     document.addEventListener("keydown", this.boundKeyHandler, { capture: true });
     document.addEventListener("click", this.boundClickHandler, { capture: true });
+
+    console.debug(
+      "[AI Compliance Copilot] Hooks installed for adapter=%s input=%o sendBtn=%o",
+      this.id,
+      this.findInputElement(),
+      this.findSendButton(),
+    );
   }
 
   destroy(): void {
@@ -92,13 +99,25 @@ export abstract class BaseAdapter implements SiteAdapter {
     if (e.key !== "Enter" || e.shiftKey) return;
 
     const input = this.findInputElement();
-    if (!input) return;
+    if (!input) {
+      console.debug("[AI Compliance Copilot] Enter pressed but no input element found");
+      return;
+    }
 
     const target = e.target as HTMLElement;
-    if (!input.contains(target) && input !== target) return;
+    if (!input.contains(target) && input !== target) {
+      console.debug(
+        "[AI Compliance Copilot] Enter target not inside input. target=%o input=%o",
+        target,
+        input,
+      );
+      return;
+    }
 
     const text = this.extractText(input);
     if (!text.trim()) return;
+
+    console.debug("[AI Compliance Copilot] Intercepted Enter — checking %d chars", text.length);
 
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -129,10 +148,18 @@ export abstract class BaseAdapter implements SiteAdapter {
     if (!this.isSendButton(clickedBtn)) return;
 
     const input = this.findInputElement();
-    if (!input) return;
+    if (!input) {
+      console.debug("[AI Compliance Copilot] Send clicked but no input element found");
+      return;
+    }
 
     const text = this.extractText(input);
     if (!text.trim()) return;
+
+    console.debug(
+      "[AI Compliance Copilot] Intercepted Send click — checking %d chars",
+      text.length,
+    );
 
     e.preventDefault();
     e.stopImmediatePropagation();
