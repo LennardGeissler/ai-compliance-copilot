@@ -1,6 +1,6 @@
 {
   "name": "@ai-compliance/detection-engine",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "license": "MIT",
   "main": "./dist/index.js",

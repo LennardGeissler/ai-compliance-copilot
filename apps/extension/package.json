@@ -1,6 +1,6 @@
 {
   "name": "ai-compliance-copilot-extension",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Browser extension for detecting sensitive data sent to external AI tools",
   "license": "MIT",
   "author": "Lennard Geißler",
