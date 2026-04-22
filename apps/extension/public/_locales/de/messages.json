@@ -66,6 +66,7 @@
   "category_email": { "message": "E-Mail-Adresse" },
   "category_phone": { "message": "Telefonnummer" },
   "category_iban": { "message": "IBAN" },
+  "category_internal_ip": { "message": "Interne IP-Adresse" },
   "category_credit_card": { "message": "Kreditkarte" },
   "category_address": { "message": "Postanschrift" },
   "category_customer_id": { "message": "Kunden- / Bestell-ID" },
@@ -91,6 +92,12 @@
   },
   "category_iban_action": {
     "message": "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer."
+  },
+  "category_internal_ip_risk": {
+    "message": "Interne IP-Adressen können Informationen über die Netzwerkstruktur deiner Organisation preisgeben und dürfen nicht mit externen Diensten geteilt werden."
+  },
+  "category_internal_ip_action": {
+    "message": "Entferne die IP-Adresse und ersetze sie durch einen generischen Begriff wie 'internes Netzwerk' oder 'Unternehmensnetzwerk' ohne spezifische Ziffern."
   },
   "category_credit_card_risk": {
     "message": "Kreditkartendaten fallen unter PCI-DSS-Compliance-Pflichten. Ihre Übermittlung an externe Dienste ist untersagt."
