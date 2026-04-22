@@ -26,6 +26,7 @@ const CATEGORY_KEYS = new Set([
   "email",
   "phone",
   "iban",
+  "internal_ip",
   "credit_card",
   "address",
   "customer_id",
@@ -68,6 +69,15 @@ const CATEGORY_ICONS: Record<string, string> = {
     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="2" y="5" width="20" height="14" rx="2"/>
     <line x1="2" y1="10" x2="22" y2="10"/>
+  </svg>`,
+
+  internal_ip: `<svg class="acc-overlay-tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+    <rect x="8" y="3" width="8" height="4" rx="1"/>
+    <line x1="12" y1="7" x2="12" y2="11"/>
+    <line x1="9" y1="10" x2="9.01" y2="10"/>
+    <line x1="15" y1="10" x2="15.01" y2="10"/>
   </svg>`,
 
   credit_card: `<svg class="acc-overlay-tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"

@@ -64,6 +64,7 @@
   "category_email": { "message": "Email address" },
   "category_phone": { "message": "Phone number" },
   "category_iban": { "message": "IBAN" },
+  "category_internal_ip": { "message": "Internal IP address" },
   "category_credit_card": { "message": "Credit card" },
   "category_address": { "message": "Postal address" },
   "category_customer_id": { "message": "Customer / order ID" },
@@ -89,6 +90,12 @@
   },
   "category_iban_action": {
     "message": "Remove the IBAN completely. Use 'the account of the person concerned' without any account number instead."
+  },
+  "category_internal_ip_risk": {
+    "message": "Internal IP addresses can reveal information about your organisation's network structure and must not be shared with external services."
+  },
+  "category_internal_ip_action": {
+    "message": "Remove the IP address and replace it with a generic term like 'internal network' or 'company network' without any specific digits."
   },
   "category_credit_card_risk": {
     "message": "Credit card data is subject to PCI-DSS compliance obligations. Transmitting it to external services is prohibited."

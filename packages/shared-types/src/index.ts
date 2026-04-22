@@ -8,6 +8,7 @@ export type DetectionCategory =
   | "email"
   | "phone"
   | "iban"
+  | "internal_ip"
   | "credit_card"
   | "address"
   | "customer_id"

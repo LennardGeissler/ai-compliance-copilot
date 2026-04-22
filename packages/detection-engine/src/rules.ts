@@ -74,6 +74,16 @@ const ibanRule: DetectionRule = {
   severity: 70,
 };
 
+// --- Internal IP Address ---
+const internalIpRule: DetectionRule = {
+  id: "internal-ip",
+  category: "internal_ip",
+  name: "Internal IP Address",
+  pattern:
+    /\b(?:10\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])|172\.(?:1[6-9]|2\d|3[01])\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])|192\.168\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d{2}|2[0-4]\d|25[0-5]))\b/g,
+  severity: 40,
+};
+
 // --- Credit Card ---
 function luhnCheck(num: string): boolean {
   const digits = num.replace(/\D/g, "");
@@ -317,6 +327,7 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   emailRule,
   phoneRule,
   ibanRule,
+  internalIpRule,
   creditCardRule,
   ...secretRules,
   ...contextualRules,
