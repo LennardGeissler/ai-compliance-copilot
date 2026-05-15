@@ -28,6 +28,98 @@ describe("Detection Engine", () => {
     });
   });
 
+  describe("SWIFT/BIC detection", () => {
+    it("detects 8-character SWIFT/BIC codes", () => {
+      const result = detect("Receiving bank BIC: DEUTDEFF");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("detects 11-character SWIFT/BIC codes", () => {
+      const result = detect("Use DEUTDEFF500 or COBADEFFXXX for the transfer");
+      const bicMatches = result.matches.filter((m) => m.category === "swift_bic");
+      expect(bicMatches.length).toBe(2);
+    });
+
+    it("detects SWIFT/BIC codes with other valid ISO country codes", () => {
+      const result = detect("BNPAFRPPXXX");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("rejects SWIFT/BIC-like values with invalid country codes", () => {
+      const result = detect("Invalid code: DEUTZZFFXXX");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("rejects 7-character SWIFT/BIC-like values", () => {
+      const result = detect("BIC: DEUTDEF");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("rejects 9-character SWIFT/BIC-like values", () => {
+      const result = detect("BIC: DEUTDEFF5");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("rejects 10-character SWIFT/BIC-like values", () => {
+      const result = detect("BIC: DEUTDEFF50");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("rejects 12-character SWIFT/BIC-like values", () => {
+      const result = detect("BIC: DEUTDEFF5000");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("rejects lowercase SWIFT/BIC codes", () => {
+      const result = detect("BIC: deutdeff");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("detects SWIFT/BIC codes inside punctuation boundaries", () => {
+      const result = detect("(DEUTDEFF), DEUTDEFF, DEUTDEFF.");
+      const bicMatches = result.matches.filter((m) => m.category === "swift_bic");
+      expect(bicMatches.length).toBe(3);
+    });
+
+    it("does not detect SWIFT/BIC codes embedded inside longer strings", () => {
+      const result = detect("XDEUTDEFFY");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("detects IBAN and SWIFT/BIC in the same string", () => {
+      const result = detect("IBAN: DE89370400440532013000 BIC: DEUTDEFF");
+      expect(result.categories).toContain("iban");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("does not detect SWIFT/BIC in empty input", () => {
+      const result = detect("");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("does not detect SWIFT/BIC in null-like input", () => {
+      const result = detect(null as unknown as string);
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("does not detect SWIFT/BIC in whitespace input", () => {
+      const result = detect("   \n\t   ");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+
+    it("accepts valid-country SWIFT/BIC-shaped tokens as heuristic matches", () => {
+      // ABCDUS12 has a valid ISO country segment ("US"), so the heuristic accepts it.
+      const result = detect("Reference: ABCDUS12");
+      expect(result.categories).toContain("swift_bic");
+    });
+
+    it("rejects separator-formatted SWIFT/BIC values", () => {
+      // The rule intentionally supports contiguous SWIFT/BIC codes only.
+      const result = detect("BIC: DEUT-DE-FF");
+      expect(result.matches.filter((m) => m.category === "swift_bic").length).toBe(0);
+    });
+  });
+
   describe("Credit card detection", () => {
     it("detects valid non-test credit card numbers", () => {
       // Luhn-valid number that is not in the known test-card allowlist

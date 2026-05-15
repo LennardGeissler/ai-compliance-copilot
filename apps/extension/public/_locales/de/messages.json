@@ -66,6 +66,7 @@
   "category_email": { "message": "E-Mail-Adresse" },
   "category_phone": { "message": "Telefonnummer" },
   "category_iban": { "message": "IBAN" },
+  "category_swift_bic": { "message": "SWIFT/BIC-Code" },
   "category_credit_card": { "message": "Kreditkarte" },
   "category_address": { "message": "Postanschrift" },
   "category_customer_id": { "message": "Kunden- / Bestell-ID" },
@@ -91,6 +92,12 @@
   },
   "category_iban_action": {
     "message": "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer."
+  },
+  "category_swift_bic_risk": {
+    "message": "SWIFT/BIC-Codes identifizieren Banken bei internationalen Ueberweisungen und koennen sensible Finanz-Routingdaten offenlegen."
+  },
+  "category_swift_bic_action": {
+    "message": "Entferne den SWIFT/BIC-Code. Verweise auf die Bank oder den Ueberweisungsweg ohne konkrete Kennung."
   },
   "category_credit_card_risk": {
     "message": "Kreditkartendaten fallen unter PCI-DSS-Compliance-Pflichten. Ihre Übermittlung an externe Dienste ist untersagt."

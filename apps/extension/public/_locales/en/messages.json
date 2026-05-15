@@ -64,6 +64,7 @@
   "category_email": { "message": "Email address" },
   "category_phone": { "message": "Phone number" },
   "category_iban": { "message": "IBAN" },
+  "category_swift_bic": { "message": "SWIFT/BIC code" },
   "category_credit_card": { "message": "Credit card" },
   "category_address": { "message": "Postal address" },
   "category_customer_id": { "message": "Customer / order ID" },
@@ -89,6 +90,12 @@
   },
   "category_iban_action": {
     "message": "Remove the IBAN completely. Use 'the account of the person concerned' without any account number instead."
+  },
+  "category_swift_bic_risk": {
+    "message": "SWIFT/BIC codes identify banks in international wire transfers and can expose sensitive financial routing information."
+  },
+  "category_swift_bic_action": {
+    "message": "Remove the SWIFT/BIC code. Refer to the bank or transfer route without including the concrete identifier."
   },
   "category_credit_card_risk": {
     "message": "Credit card data is subject to PCI-DSS compliance obligations. Transmitting it to external services is prohibited."
