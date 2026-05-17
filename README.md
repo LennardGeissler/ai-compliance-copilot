@@ -111,15 +111,15 @@ Deep dives: [architecture](docs/architecture.md) · [detection engine](docs/dete
 
 Rules combine regex, validators (Luhn, example-domain filters, known-test-card denylist), and a context heuristic that suppresses matches surrounded by words like `example`, `sample`, or `Beispiel`.
 
-| Category                     | Examples                                                                                                                | Default severity |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `email`, `phone`             | Contact info                                                                                                            | 30 – 40          |
-| `iban`, `credit_card`        | Financial (Luhn validated; MOD-97 tracked in [#35](https://github.com/lennardgeissler/ai-compliance-copilot/issues/35)) | 70 – 80          |
-| `secret`                     | API keys, AWS keys, bearer tokens, private keys, passwords                                                              | 80 – 95          |
-| `address`                    | Postal addresses (incl. German format)                                                                                  | 50               |
-| `hr_data`                    | Salary, SSN, Tax-ID                                                                                                     | 60 – 75          |
-| `employee_id`, `customer_id` | Internal identifiers                                                                                                    | 35 – 40          |
-| `custom_keyword`             | User-defined patterns                                                                                                   | configurable     |
+| Category                           | Examples                                                                                                                            | Default severity |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `email`, `phone`                   | Contact info                                                                                                                        | 30 – 40          |
+| `iban`, `swift_bic`, `credit_card` | Financial identifiers (Luhn validated; MOD-97 tracked in [#35](https://github.com/lennardgeissler/ai-compliance-copilot/issues/35)) | 70 – 80          |
+| `secret`                           | API keys, AWS keys, bearer tokens, private keys, passwords                                                                          | 80 – 95          |
+| `address`                          | Postal addresses (incl. German format)                                                                                              | 50               |
+| `hr_data`                          | Salary, SSN, Tax-ID                                                                                                                 | 60 – 75          |
+| `employee_id`, `customer_id`       | Internal identifiers                                                                                                                | 35 – 40          |
+| `custom_keyword`                   | User-defined patterns                                                                                                               | configurable     |
 
 Detection is heuristic — false positives and false negatives are expected. The rule set is tuned against a corpus in [`packages/detection-engine/src/__tests__`](packages/detection-engine/src/__tests__); contributions welcome.
 

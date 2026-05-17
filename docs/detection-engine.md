@@ -11,6 +11,7 @@ Source: [packages/detection-engine/src](../packages/detection-engine/src)
 | `email`          | RFC 5322, example.com filtered                        | 40           |
 | `phone`          | International formats                                 | 30           |
 | `iban`           | EU IBAN with checksum                                 | 70           |
+| `swift_bic`      | SWIFT/BIC bank identifiers                            | 70           |
 | `credit_card`    | Luhn-validated, test cards filtered                   | 80           |
 | `address`        | Generic + German format                               | 50           |
 | `employee_id`    | Pattern-based                                         | 40           |
