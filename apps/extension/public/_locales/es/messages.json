@@ -1,0 +1,179 @@
+{
+  "ext_name": { "message": "AI Compliance Copilot" },
+  "ext_description": {
+    "message": "Detecta y evita que datos sensibles sean enviados a herramientas de IA externas"
+  },
+
+  "header_subtitle": { "message": "Protección de Datos" },
+  "theme_toggle_title": { "message": "Cambiar tema" },
+  "tab_activity": { "message": "Actividad" },
+  "tab_prompts": { "message": "Biblioteca de Prompts" },
+
+  "status_checking": { "message": "Comprobando…" },
+  "status_connected": { "message": "Conectado y Protegido" },
+  "status_disconnected": { "message": "No conectado — configuración predeterminada" },
+
+  "badge_active": { "message": "Activo" },
+  "badge_na": { "message": "N/A" },
+  "badge_company": { "message": "Empresa" },
+
+  "section_today": { "message": "Actividad de Hoy" },
+  "stat_detected": { "message": "Detectado" },
+  "stat_blocked": { "message": "Bloqueado" },
+  "stat_override": { "message": "Anulado" },
+
+  "section_current_page": { "message": "Página Actual" },
+  "info_ai_tool": { "message": "Herramienta de IA" },
+  "info_protection": { "message": "Protección" },
+  "current_tool_none": { "message": "Sin herramienta de IA" },
+
+  "section_recent": { "message": "Detecciones Recientes" },
+  "empty_no_detections": { "message": "Aún no hay detecciones." },
+  "empty_session_clean": { "message": "Tu sesión está limpia." },
+
+  "action_blocked": { "message": "Bloqueado" },
+  "action_override": { "message": "Anulado" },
+  "action_warning": { "message": "Advertencia" },
+
+  "section_connect": { "message": "Opcional: Conectar panel empresarial" },
+  "input_url_placeholder": { "message": "URL del panel (ej. http://localhost:3000)" },
+  "input_token_placeholder": { "message": "Token de autenticación" },
+  "btn_connect": { "message": "Conectar" },
+  "connect_standalone_hint": {
+    "message": "No es necesario en modo independiente — la extensión funciona sin un panel."
+  },
+  "btn_open_dashboard": { "message": "Abrir Panel" },
+
+  "section_company_library": { "message": "Biblioteca Empresarial" },
+  "section_my_prompts": { "message": "Mis Prompts" },
+  "btn_new": { "message": "Nuevo" },
+  "prompt_form_new": { "message": "Nuevo Prompt" },
+  "prompt_form_edit": { "message": "Editar Prompt" },
+  "prompt_title_placeholder": { "message": "Título (ej. 'Lista de verificación de revisión de código')" },
+  "prompt_content_placeholder": { "message": "Texto del prompt…" },
+  "btn_save": { "message": "Guardar" },
+  "btn_cancel": { "message": "Cancelar" },
+  "btn_use": { "message": "Usar" },
+  "btn_edit_title": { "message": "Editar" },
+  "btn_delete_title": { "message": "Eliminar" },
+  "prompts_empty_line1": { "message": "Aún no hay prompts personales guardados." },
+  "prompts_empty_line2": {
+    "message": "Haz clic en <strong>Nuevo</strong> para crear tu primer prompt."
+  },
+
+  "footer_tagline": { "message": "Gobernanza de IA con privacidad primero" },
+
+  "category_email": { "message": "Dirección de correo electrónico" },
+  "category_phone": { "message": "Número de teléfono" },
+  "category_iban": { "message": "IBAN" },
+  "category_credit_card": { "message": "Tarjeta de crédito" },
+  "category_address": { "message": "Dirección postal" },
+  "category_customer_id": { "message": "ID de cliente / pedido" },
+  "category_employee_id": { "message": "ID de empleado" },
+  "category_secret": { "message": "Secreto / clave API" },
+  "category_hr_data": { "message": "Datos de RR.HH." },
+  "category_custom_keyword": { "message": "Palabra clave restringida" },
+
+  "category_email_risk": {
+    "message": "Las direcciones de correo electrónico son datos personales según el RGPD Art. 4 y no deben ser transmitidas a servicios externos de IA sin una base legal."
+  },
+  "category_email_action": {
+    "message": "Reemplaza la dirección con una frase neutral como 'el usuario correspondiente' o 'compañero XY' — sin dirección de correo real."
+  },
+
+  "category_phone_risk": {
+    "message": "Los números de teléfono permiten la identificación directa de individuos y están sujetos a normas de protección de datos."
+  },
+  "category_phone_action": {
+    "message": "Elimina el número o reemplázalo con '[número de teléfono]'. Describe el asunto sin una secuencia de dígitos concreta."
+  },
+
+  "category_iban_risk": {
+    "message": "Los números IBAN son datos bancarios altamente sensibles. Su divulgación no autorizada puede tener consecuencias civiles y penales."
+  },
+  "category_iban_action": {
+    "message": "Elimina el IBAN completamente. Usa 'la cuenta de la persona correspondiente' sin número de cuenta en su lugar."
+  },
+
+  "category_credit_card_risk": {
+    "message": "Los datos de tarjetas de crédito están sujetos a obligaciones de cumplimiento PCI-DSS. Su transmisión a servicios externos está prohibida."
+  },
+  "category_credit_card_action": {
+    "message": "Elimina el número de tarjeta. Describe el problema con 'el método de pago' sin dígitos concretos."
+  },
+
+  "category_address_risk": {
+    "message": "Las direcciones postales permiten la localización física de individuos y son datos protegidos según el RGPD."
+  },
+  "category_address_action": {
+    "message": "Reemplaza la dirección con 'dirección del cliente' o 'dirección de envío' — sin calle, código postal o ciudad."
+  },
+
+  "category_customer_id_risk": {
+    "message": "Los números de cliente y pedido pueden usarse para identificar individuos o vincular conjuntos de datos."
+  },
+  "category_customer_id_action": {
+    "message": "Pseudonimiza el ID (ej. 'cliente A', 'pedido #XYZ') o describe el caso sin un número de referencia real."
+  },
+
+  "category_employee_id_risk": {
+    "message": "Los números de empleado son identificadores internos y no deben ser compartidos con servicios externos."
+  },
+  "category_employee_id_action": {
+    "message": "Reemplaza el número con una descripción de rol como 'el empleado correspondiente' o 'compañero del equipo X'."
+  },
+
+  "category_secret_risk": {
+    "message": "Las claves API, contraseñas y tokens otorgan acceso a sistemas. Un compromiso puede llevar a incidentes de seguridad graves."
+  },
+  "category_secret_action": {
+    "message": "Elimina el secreto inmediatamente y rotaciónelo en tu sistema. Describe el problema sin credenciales concretas."
+  },
+
+  "category_hr_data_risk": {
+    "message": "Los datos salariales, números de seguridad social y otra información de RR.HH. son datos particularmente sensibles según el RGPD Art. 9."
+  },
+  "category_hr_data_action": {
+    "message": "Reemplaza los datos de RR.HH. con descripciones genéricas ('rango salarial', 'persona correspondiente') sin valores reales."
+  },
+
+  "category_custom_keyword_risk": {
+    "message": "Este término ha sido clasificado como confidencial por las políticas de cumplimiento de tu organización."
+  },
+  "category_custom_keyword_action": {
+    "message": "Elimina o reformula el término señalado de acuerdo con las políticas de comunicación internas."
+  },
+
+  "category_unknown": { "message": "Datos sensibles" },
+  "category_unknown_risk": {
+    "message": "Este contenido fue marcado como potencialmente sensible por la política de cumplimiento."
+  },
+  "category_unknown_action": {
+    "message": "Revisa el contenido marcado y elimina o reformula cualquier información sensible antes de enviar."
+  },
+
+  "overlay_title_blocked": { "message": "Transmisión bloqueada" },
+  "overlay_title_warning": { "message": "Datos sensibles detectados" },
+  "overlay_risk_critical": { "message": "Riesgo crítico" },
+  "overlay_risk_high": { "message": "Riesgo alto" },
+  "overlay_default_block_message": {
+    "message": "Este mensaje contiene datos restringidos y no puede ser enviado según las políticas de cumplimiento de tu organización."
+  },
+  "overlay_default_warn_message": {
+    "message": "Tu mensaje contiene información potencialmente sensible. Por favor revísalo cuidadosamente antes de continuar."
+  },
+  "overlay_why_blocked": { "message": "¿Por qué fue bloqueado?" },
+  "overlay_section_detected_data": { "message": "Datos detectados" },
+  "overlay_recommendation_label": { "message": "Recomendación" },
+  "overlay_triggered_policies": { "message": "Políticas activadas" },
+  "overlay_redact_section_label": { "message": "Versión limpiada" },
+  "overlay_redact_hint": {
+    "message": "Las partes sensibles han sido reemplazadas con marcadores de posición. Aún puedes ajustar el texto antes de enviar."
+  },
+  "overlay_redact_textarea_aria": { "message": "Texto limpio" },
+  "overlay_btn_anonymize": { "message": "Anonimizar texto" },
+  "overlay_btn_send_redacted": { "message": "Enviar limpio" },
+  "overlay_btn_back": { "message": "Atrás y editar" },
+  "overlay_btn_override_send": { "message": "Anular y enviar" },
+  "overlay_btn_send_anyway": { "message": "Enviar de todos modos" }
+}
