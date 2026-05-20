@@ -64,6 +64,7 @@
   "category_email": { "message": "Email address" },
   "category_phone": { "message": "Phone number" },
   "category_iban": { "message": "IBAN" },
+  "category_vat_id": { "message": "VAT ID" },
   "category_swift_bic": { "message": "SWIFT/BIC code" },
   "category_credit_card": { "message": "Credit card" },
   "category_address": { "message": "Postal address" },
@@ -90,6 +91,12 @@
   },
   "category_iban_action": {
     "message": "Remove the IBAN completely. Use 'the account of the person concerned' without any account number instead."
+  },
+  "category_vat_id_risk": {
+    "message": "VAT IDs identify a specific business and can link invoices, contracts, or supplier records to that company."
+  },
+  "category_vat_id_action": {
+    "message": "Replace the VAT ID with a neutral placeholder such as 'the supplier VAT ID' unless the exact identifier is required."
   },
   "category_swift_bic_risk": {
     "message": "SWIFT/BIC codes identify banks in international wire transfers and can expose sensitive financial routing information."

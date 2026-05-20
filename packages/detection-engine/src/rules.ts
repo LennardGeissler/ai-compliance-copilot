@@ -74,6 +74,16 @@ const ibanRule: DetectionRule = {
   severity: 70,
 };
 
+// --- EU VAT ID ---
+const vatIdRule: DetectionRule = {
+  id: "eu-vat-id",
+  category: "vat_id",
+  name: "EU VAT ID",
+  pattern:
+    /\b(?:AT ?U\d{8}|BE ?0?\d{9}|DE ?\d{9}|FR ?[A-HJ-NP-Z0-9]{2} ?\d{9}|GB ?\d{9}|ES ?[A-Z0-9]\d{7}[A-Z0-9])\b/g,
+  severity: 65,
+};
+
 // --- SWIFT / BIC ---
 const ISO_3166_1_ALPHA_2 = new Set([
   "AD",
@@ -585,6 +595,7 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   emailRule,
   phoneRule,
   ibanRule,
+  vatIdRule,
   swiftBicRule,
   creditCardRule,
   ...secretRules,
