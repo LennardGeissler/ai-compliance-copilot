@@ -28,6 +28,46 @@ describe("Detection Engine", () => {
     });
   });
 
+  describe("EU VAT ID detection", () => {
+    it("detects major EU VAT ID formats", () => {
+      const result = detect(
+        "VAT IDs: DE123456789, FRAB123456789, ATU12345678, GB123456789, ESX1234567A",
+      );
+      const vatMatches = result.matches.filter((m) => m.category === "vat_id");
+
+      expect(result.categories).toContain("vat_id");
+      expect(vatMatches.map((m) => m.matchedText).sort()).toEqual(
+        [
+          "DE123456789",
+          "FRAB123456789",
+          "ATU12345678",
+          "GB123456789",
+          "ESX1234567A",
+        ].sort(),
+      );
+    });
+
+    it("detects VAT IDs with a single separator after the country prefix", () => {
+      const result = detect("Supplier VAT numbers: DE 123456789 and AT U12345678");
+      const vatMatches = result.matches.filter((m) => m.category === "vat_id");
+
+      expect(vatMatches.map((m) => m.matchedText)).toEqual(["DE 123456789", "AT U12345678"]);
+    });
+
+    it("assigns medium severity to VAT IDs", () => {
+      const result = detect("Business partner VAT ID: DE123456789");
+
+      expect(result.severityScore).toBe(52);
+      expect(result.recommendation).toBe("warn");
+    });
+
+    it("rejects incomplete VAT-like values", () => {
+      const result = detect("Invalid values: DE12345, ATU1234, NL123456789B");
+
+      expect(result.matches.filter((m) => m.category === "vat_id").length).toBe(0);
+    });
+  });
+
   describe("SWIFT/BIC detection", () => {
     it("detects 8-character SWIFT/BIC codes", () => {
       const result = detect("Receiving bank BIC: DEUTDEFF");

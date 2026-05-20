@@ -11,6 +11,7 @@ export type DetectionCategory =
   | "swift_bic"
   | "credit_card"
   | "address"
+  | "vat_id"
   | "customer_id"
   | "employee_id"
   | "secret"
