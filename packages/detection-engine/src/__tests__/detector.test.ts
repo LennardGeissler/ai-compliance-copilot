@@ -37,13 +37,7 @@ describe("Detection Engine", () => {
 
       expect(result.categories).toContain("vat_id");
       expect(vatMatches.map((m) => m.matchedText).sort()).toEqual(
-        [
-          "DE123456789",
-          "FRAB123456789",
-          "ATU12345678",
-          "GB123456789",
-          "ESX1234567A",
-        ].sort(),
+        ["DE123456789", "FRAB123456789", "ATU12345678", "GB123456789", "ESX1234567A"].sort(),
       );
     });
 
