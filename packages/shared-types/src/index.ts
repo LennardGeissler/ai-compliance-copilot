@@ -13,6 +13,7 @@ export type DetectionCategory =
   | "credit_card"
   | "address"
   | "vat_id"
+  | "tax_id"
   | "customer_id"
   | "employee_id"
   | "secret"

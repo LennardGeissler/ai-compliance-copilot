@@ -59,6 +59,43 @@ describe("Detection Engine", () => {
     });
   });
 
+  describe("German tax ID (Steuer-IdNr) detection", () => {
+    it("detects a valid tax ID", () => {
+      const result = detect("Steuer-IdNr: 65929970489");
+      expect(result.categories).toContain("tax_id");
+    });
+
+    it("detects a valid tax ID written with spaces", () => {
+      const result = detect("ID: 65 929 970 489");
+      const m = result.matches.filter((x) => x.category === "tax_id");
+      expect(m).toHaveLength(1);
+      expect(m[0].matchedText).toBe("65 929 970 489");
+    });
+
+    it("rejects an 11-digit number with an invalid check digit", () => {
+      // valid prefix 6592997048 but wrong check digit (0 instead of 9)
+      const result = detect("65929970480");
+      expect(result.categories).not.toContain("tax_id");
+    });
+
+    it("rejects numbers starting with zero", () => {
+      const result = detect("01234567890");
+      expect(result.categories).not.toContain("tax_id");
+    });
+
+    it("rejects numbers that are not 11 digits long", () => {
+      const ten = detect("6592997048");
+      const twelve = detect("659299704890");
+      expect(ten.categories).not.toContain("tax_id");
+      expect(twelve.categories).not.toContain("tax_id");
+    });
+
+    it("assigns high severity to a detected tax ID", () => {
+      const result = detect("65929970489");
+      expect(result.severityScore).toBeGreaterThanOrEqual(70);
+    });
+  });
+
   describe("EU VAT ID detection", () => {
     it("detects major EU VAT ID formats", () => {
       const result = detect(

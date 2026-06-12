@@ -28,6 +28,7 @@ const CATEGORY_KEYS = new Set([
   "iban",
   "internal_ip",
   "swift_bic",
+  "tax_id",
   "credit_card",
   "address",
   "customer_id",

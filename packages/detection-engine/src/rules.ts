@@ -211,6 +211,42 @@ const vatIdRule: DetectionRule = {
   severity: 65,
 };
 
+// --- German Tax ID (Steuerliche Identifikationsnummer) ---
+
+/**
+ * Validates a German tax ID (Steuer-IdNr) per the official structure:
+ *  - exactly 11 digits, first digit is never 0
+ *  - the 11th digit is an ISO 7064 MOD 11,10 check digit over the first 10
+ *
+ * The check digit makes this a strong validator, which matters because a bare
+ * 11-digit number has a high false-positive risk.
+ */
+function validateGermanTaxId(match: string): boolean {
+  const digits = match.replace(/\s+/g, "");
+  if (!/^[1-9]\d{10}$/.test(digits)) return false;
+
+  // ISO 7064 MOD 11,10 check digit over the first 10 digits
+  let product = 10;
+  for (let i = 0; i < 10; i++) {
+    let sum = (Number(digits[i]) + product) % 10;
+    if (sum === 0) sum = 10;
+    product = (sum * 2) % 11;
+  }
+  const checkDigit = (11 - product) % 10;
+
+  return checkDigit === Number(digits[10]);
+}
+
+const germanTaxIdRule: DetectionRule = {
+  id: "de-tax-id",
+  category: "tax_id",
+  name: "German Tax ID",
+  // 11 digits, first non-zero, optional single spaces between digits
+  pattern: /\b[1-9]\d(?:\s?\d){9}\b/g,
+  severity: 75,
+  validate: validateGermanTaxId,
+};
+
 // --- SWIFT / BIC ---
 const ISO_3166_1_ALPHA_2 = new Set([
   "AD",
@@ -732,6 +768,7 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   emailRule,
   phoneRule,
   ibanRule,
+  germanTaxIdRule,
   internalIpRule,
   vatIdRule,
   swiftBicRule,
@@ -745,4 +782,4 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   customerIdRule,
 ];
 
-export { luhnCheck, validateIban };
+export { luhnCheck, validateIban, validateGermanTaxId };
