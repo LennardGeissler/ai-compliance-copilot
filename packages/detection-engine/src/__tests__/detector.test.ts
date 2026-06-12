@@ -26,6 +26,37 @@ describe("Detection Engine", () => {
       const result = detect("IBAN: DE89 3704 0044 0532 0130 00");
       expect(result.categories).toContain("iban");
     });
+
+    it("detects valid IBANs from several countries", () => {
+      const valid = [
+        "GB82WEST12345698765432",
+        "FR1420041010050500013M02606",
+        "NL91ABNA0417164300",
+        "CH9300762011623852957",
+        "BE68539007547034",
+      ];
+      for (const iban of valid) {
+        const result = detect(`Account: ${iban}`);
+        expect(result.categories, iban).toContain("iban");
+      }
+    });
+
+    it("rejects well-shaped strings that fail the MOD-97 checksum", () => {
+      // Correct length for DE but wrong check digits
+      const result = detect("DE00370400440532013000");
+      expect(result.categories).not.toContain("iban");
+    });
+
+    it("rejects IBANs with the wrong length for their country", () => {
+      // DE must be 22 chars; this is one digit short
+      const result = detect("DE8937040044053201300");
+      expect(result.categories).not.toContain("iban");
+    });
+
+    it("rejects unknown country codes", () => {
+      const result = detect("ZZ89370400440532013000");
+      expect(result.categories).not.toContain("iban");
+    });
   });
 
   describe("EU VAT ID detection", () => {
