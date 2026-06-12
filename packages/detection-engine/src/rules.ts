@@ -66,12 +66,139 @@ const phoneRule: DetectionRule = {
 };
 
 // --- IBAN ---
+
+/**
+ * Total IBAN length per country (ISO 13616 / SWIFT IBAN registry).
+ * Length includes the 2-letter country code and 2 check digits.
+ */
+const IBAN_COUNTRY_LENGTHS: Record<string, number> = {
+  AD: 24,
+  AE: 23,
+  AL: 28,
+  AT: 20,
+  AZ: 28,
+  BA: 20,
+  BE: 16,
+  BG: 22,
+  BH: 22,
+  BI: 27,
+  BR: 29,
+  BY: 28,
+  CH: 21,
+  CR: 22,
+  CY: 28,
+  CZ: 24,
+  DE: 22,
+  DK: 18,
+  DO: 28,
+  EE: 20,
+  EG: 29,
+  ES: 24,
+  FI: 18,
+  FO: 18,
+  FR: 27,
+  GB: 22,
+  GE: 22,
+  GI: 23,
+  GL: 18,
+  GR: 27,
+  GT: 28,
+  HR: 21,
+  HU: 28,
+  IE: 22,
+  IL: 23,
+  IQ: 23,
+  IS: 26,
+  IT: 27,
+  JO: 30,
+  KW: 30,
+  KZ: 20,
+  LB: 28,
+  LC: 32,
+  LI: 21,
+  LT: 20,
+  LU: 20,
+  LV: 21,
+  LY: 25,
+  MC: 27,
+  MD: 24,
+  ME: 22,
+  MK: 19,
+  MR: 27,
+  MT: 31,
+  MU: 30,
+  NL: 18,
+  NO: 15,
+  PK: 24,
+  PL: 28,
+  PS: 29,
+  PT: 25,
+  QA: 29,
+  RO: 24,
+  RS: 22,
+  SA: 24,
+  SC: 31,
+  SD: 18,
+  SE: 24,
+  SI: 19,
+  SK: 24,
+  SM: 27,
+  ST: 25,
+  SV: 28,
+  TL: 23,
+  TN: 24,
+  TR: 26,
+  UA: 29,
+  VA: 22,
+  VG: 24,
+  XK: 20,
+};
+
+/**
+ * Validates an IBAN per ISO 13616:
+ *  1. country-specific total length
+ *  2. MOD-97 checksum (rearrange, letters→digits, mod 97 === 1)
+ *
+ * Returns false (discard match) for structurally well-shaped strings that
+ * fail the checksum or have the wrong length for their country.
+ */
+function validateIban(match: string): boolean {
+  const iban = match.replace(/\s+/g, "").toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]+$/.test(iban)) return false;
+
+  const country = iban.slice(0, 2);
+  const expectedLength = IBAN_COUNTRY_LENGTHS[country];
+  if (expectedLength === undefined || iban.length !== expectedLength) return false;
+
+  // Move the first four characters to the end
+  const rearranged = iban.slice(4) + iban.slice(0, 4);
+
+  // Replace each letter with two digits: A=10, B=11, ... Z=35
+  let numeric = "";
+  for (const ch of rearranged) {
+    if (ch >= "A" && ch <= "Z") {
+      numeric += (ch.charCodeAt(0) - 55).toString();
+    } else {
+      numeric += ch;
+    }
+  }
+
+  // Compute mod 97 in chunks to stay within safe integer range
+  let remainder = 0;
+  for (let i = 0; i < numeric.length; i += 7) {
+    remainder = parseInt(String(remainder) + numeric.slice(i, i + 7), 10) % 97;
+  }
+
+  return remainder === 1;
+}
+
 const ibanRule: DetectionRule = {
   id: "iban",
   category: "iban",
   name: "IBAN",
   pattern: /\b[A-Z]{2}\d{2}[\s]?[\dA-Z]{4}[\s]?(?:[\dA-Z]{4}[\s]?){1,7}[\dA-Z]{1,4}\b/g,
   severity: 70,
+  validate: validateIban,
 };
 
 // --- EU VAT ID ---
@@ -618,4 +745,4 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   customerIdRule,
 ];
 
-export { luhnCheck };
+export { luhnCheck, validateIban };
