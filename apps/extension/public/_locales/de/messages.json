@@ -66,6 +66,7 @@
   "category_email": { "message": "E-Mail-Adresse" },
   "category_phone": { "message": "Telefonnummer" },
   "category_iban": { "message": "IBAN" },
+  "category_vat_id": { "message": "USt-IdNr." },
   "category_swift_bic": { "message": "SWIFT/BIC-Code" },
   "category_credit_card": { "message": "Kreditkarte" },
   "category_address": { "message": "Postanschrift" },
@@ -92,6 +93,12 @@
   },
   "category_iban_action": {
     "message": "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer."
+  },
+  "category_vat_id_risk": {
+    "message": "Umsatzsteuer-Identifikationsnummern identifizieren ein konkretes Unternehmen und koennen Rechnungen, Vertraege oder Lieferantendaten damit verknuepfen."
+  },
+  "category_vat_id_action": {
+    "message": "Ersetze die USt-IdNr. durch einen neutralen Platzhalter wie 'USt-IdNr. des Lieferanten', sofern die konkrete Kennung nicht erforderlich ist."
   },
   "category_swift_bic_risk": {
     "message": "SWIFT/BIC-Codes identifizieren Banken bei internationalen Ueberweisungen und koennen sensible Finanz-Routingdaten offenlegen."
