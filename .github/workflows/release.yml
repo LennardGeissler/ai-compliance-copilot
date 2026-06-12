@@ -52,22 +52,37 @@ jobs:
         run: pnpm test
 
       # ── Versioning ────────────────────────────────────────────────────────
-      # If the triggering commit contains [skip bump] (e.g. a release/*
-      # branch that already set the target version in package.json), we
-      # tag the current version instead of incrementing the patch.
+      # Conventional-Commit-driven bump (see scripts/bump-version.js):
+      #   feat:                              -> minor
+      #   fix: | perf:                       -> patch
+      #   feat!: / BREAKING CHANGE:          -> major (clamped to minor on 0.x)
+      #   chore/docs/style/refactor/test/ci/build/...  -> no release
+      #
+      # `[skip bump]` in the head commit message keeps the version as-is and
+      # still publishes — for release/* branches that pre-set the target
+      # version. Without that flag, a push with no release-worthy commits
+      # short-circuits the rest of the job.
       - name: Resolve release version
         id: version
         run: |
           if [[ "${{ github.event.head_commit.message }}" == *"[skip bump]"* ]]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
             echo "bumped=false" >> $GITHUB_OUTPUT
           else
             node scripts/bump-version.js
-            echo "bumped=true" >> $GITHUB_OUTPUT
+            SHOULD_RELEASE=$(node -p "require('./release-info.json').shouldRelease")
+            echo "should_release=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
+            echo "bumped=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
+            if [[ "$SHOULD_RELEASE" == "false" ]]; then
+              echo "No release-worthy commits since last tag — skipping release steps." \
+                >> $GITHUB_STEP_SUMMARY
+            fi
           fi
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Commit & tag version bump
+        if: steps.version.outputs.should_release == 'true'
         run: |
           git config user.name  "release-bot[bot]"
           git config user.email "release-bot[bot]@users.noreply.github.com"
@@ -86,12 +101,14 @@ jobs:
 
       # ── Package extension ─────────────────────────────────────────────────
       - name: Zip extension dist
+        if: steps.version.outputs.should_release == 'true'
         run: |
           cd apps/extension/dist
           zip -r "${{ github.workspace }}/ai-compliance-extension-v${{ steps.version.outputs.version }}.zip" .
 
       # ── GitHub Release ────────────────────────────────────────────────────
       - name: Create GitHub Release
+        if: steps.version.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ steps.version.outputs.version }}
@@ -106,11 +123,13 @@ jobs:
       # package.json without workspace:* dev/runtime deps, so the artifact
       # is installable and visible under the repo's "Packages" tab.
       - name: Prepare npm publish dir
+        if: steps.version.outputs.should_release == 'true'
         run: node scripts/prepare-npm-publish.mjs
         env:
           VERSION: ${{ steps.version.outputs.version }}
 
       - name: Publish to GitHub Packages
+        if: steps.version.outputs.should_release == 'true'
         run: npm publish --access restricted
         working-directory: .release-publish
         env:
