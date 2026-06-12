@@ -66,6 +66,7 @@
   "category_email": { "message": "E-Mail-Adresse" },
   "category_phone": { "message": "Telefonnummer" },
   "category_iban": { "message": "IBAN" },
+  "category_internal_ip": { "message": "Interne IP-Adresse" },
   "category_vat_id": { "message": "USt-IdNr." },
   "category_swift_bic": { "message": "SWIFT/BIC-Code" },
   "category_credit_card": { "message": "Kreditkarte" },
@@ -93,6 +94,12 @@
   },
   "category_iban_action": {
     "message": "Entferne die IBAN vollständig. Verwende stattdessen 'das Konto der betreffenden Person' ohne Kontonummer."
+  },
+  "category_internal_ip_risk": {
+    "message": "Interne IP-Adressen können Informationen über die Netzwerkstruktur deiner Organisation preisgeben und dürfen nicht mit externen Diensten geteilt werden."
+  },
+  "category_internal_ip_action": {
+    "message": "Entferne die IP-Adresse und ersetze sie durch einen generischen Begriff wie 'internes Netzwerk' oder 'Unternehmensnetzwerk' ohne spezifische Ziffern."
   },
   "category_vat_id_risk": {
     "message": "Umsatzsteuer-Identifikationsnummern identifizieren ein konkretes Unternehmen und koennen Rechnungen, Vertraege oder Lieferantendaten damit verknuepfen."

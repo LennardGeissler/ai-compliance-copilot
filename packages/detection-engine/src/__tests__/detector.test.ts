@@ -154,6 +154,38 @@ describe("Detection Engine", () => {
     });
   });
 
+  describe("Internal IP detection", () => {
+    it("detects RFC 1918 private IPv4 addresses", () => {
+      const result = detect("Servers are at 10.0.1.42, 172.16.0.1 and 192.168.1.100");
+      const internalIpMatches = result.matches.filter((m) => m.category === "internal_ip");
+
+      expect(result.categories).toContain("internal_ip");
+      expect(internalIpMatches.length).toBe(3);
+    });
+
+    it("detects the full 172.16.0.0/12 range", () => {
+      const result = detect("Internal host: 172.31.255.255");
+      expect(result.categories).toContain("internal_ip");
+    });
+
+    it("does not flag public IPv4 addresses", () => {
+      const result = detect("Public DNS: 8.8.8.8 and public IP: 1.2.3.4");
+      expect(result.matches.filter((m) => m.category === "internal_ip").length).toBe(0);
+    });
+
+    it("does not flag invalid IPv4 addresses", () => {
+      const result = detect("Invalid addresses: 999.999.999.999 and 192.168.1.999");
+      expect(result.matches.filter((m) => m.category === "internal_ip").length).toBe(0);
+    });
+
+    it("returns warn for a single internal IP", () => {
+      const result = detect("DB host: 10.0.1.42");
+      expect(result.categories).toContain("internal_ip");
+      expect(result.severityScore).toBeGreaterThanOrEqual(30);
+      expect(result.recommendation).toBe("warn");
+    });
+  });
+
   describe("Credit card detection", () => {
     it("detects valid non-test credit card numbers", () => {
       // Luhn-valid number that is not in the known test-card allowlist
