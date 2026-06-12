@@ -68,6 +68,7 @@
   "category_iban": { "message": "IBAN" },
   "category_internal_ip": { "message": "Interne IP-Adresse" },
   "category_vat_id": { "message": "USt-IdNr." },
+  "category_tax_id": { "message": "Steuer-IdNr." },
   "category_swift_bic": { "message": "SWIFT/BIC-Code" },
   "category_credit_card": { "message": "Kreditkarte" },
   "category_address": { "message": "Postanschrift" },
@@ -106,6 +107,12 @@
   },
   "category_vat_id_action": {
     "message": "Ersetze die USt-IdNr. durch einen neutralen Platzhalter wie 'USt-IdNr. des Lieferanten', sofern die konkrete Kennung nicht erforderlich ist."
+  },
+  "category_tax_id_risk": {
+    "message": "Die steuerliche Identifikationsnummer (Steuer-IdNr) ist eine lebenslange persoenliche Kennung. Eine Offenlegung ermoeglicht die Verknuepfung von Steuer-, Beschaeftigungs- und Finanzdaten mit einer Person."
+  },
+  "category_tax_id_action": {
+    "message": "Entferne die Steuer-IdNr. vollstaendig. Verweise stattdessen auf 'die betroffene Person' ohne identifizierende Nummer."
   },
   "category_swift_bic_risk": {
     "message": "SWIFT/BIC-Codes identifizieren Banken bei internationalen Ueberweisungen und koennen sensible Finanz-Routingdaten offenlegen."

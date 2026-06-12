@@ -66,6 +66,7 @@
   "category_email": { "message": "Adresse e-mail" },
   "category_phone": { "message": "Numéro de téléphone" },
   "category_iban": { "message": "IBAN" },
+  "category_tax_id": { "message": "ID fiscal" },
   "category_credit_card": { "message": "Carte de crédit" },
   "category_address": { "message": "Adresse postale" },
   "category_customer_id": { "message": "ID client / commande" },

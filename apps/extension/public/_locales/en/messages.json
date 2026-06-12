@@ -66,6 +66,7 @@
   "category_iban": { "message": "IBAN" },
   "category_internal_ip": { "message": "Internal IP address" },
   "category_vat_id": { "message": "VAT ID" },
+  "category_tax_id": { "message": "Tax ID" },
   "category_swift_bic": { "message": "SWIFT/BIC code" },
   "category_credit_card": { "message": "Credit card" },
   "category_address": { "message": "Postal address" },
@@ -104,6 +105,12 @@
   },
   "category_vat_id_action": {
     "message": "Replace the VAT ID with a neutral placeholder such as 'the supplier VAT ID' unless the exact identifier is required."
+  },
+  "category_tax_id_risk": {
+    "message": "A German tax ID (Steuer-IdNr) is a lifelong personal identifier. Disclosure enables linking of tax, employment, and financial records to an individual."
+  },
+  "category_tax_id_action": {
+    "message": "Remove the tax ID completely. Refer to 'the person concerned' without any identifying number."
   },
   "category_swift_bic_risk": {
     "message": "SWIFT/BIC codes identify banks in international wire transfers and can expose sensitive financial routing information."
