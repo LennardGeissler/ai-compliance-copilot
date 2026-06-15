@@ -36,7 +36,7 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@10.34.3",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.0",
