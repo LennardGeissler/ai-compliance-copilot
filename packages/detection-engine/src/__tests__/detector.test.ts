@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { detect } from "../detector";
+import { buildRedactedText } from "../redact";
 
 describe("Detection Engine", () => {
   describe("Email detection", () => {
@@ -445,6 +446,51 @@ describe("Detection Engine", () => {
       // The keyword is > 150 chars away, so context should NOT reduce confidence
       expect(result.severityScore).toBeGreaterThanOrEqual(70);
       expect(result.recommendation).toBe("block");
+    });
+  });
+
+  describe("redaction labels for internal_ip and vat_id", () => {
+    it("labels an internal IP instead of falling back to [GESPERRT]", () => {
+      const text = "Server läuft auf 192.168.1.100 im internen Netz";
+      const result = detect(text);
+      expect(result.matches.some((m) => m.category === "internal_ip")).toBe(true);
+      expect(buildRedactedText(text, result.matches)).toBe(
+        "Server läuft auf [INTERNE IP] im internen Netz",
+      );
+    });
+
+    it("labels a VAT ID instead of falling back to [GESPERRT]", () => {
+      const text = "Unsere USt-IdNr lautet DE123456789";
+      const result = detect(text);
+      expect(result.matches.some((m) => m.category === "vat_id")).toBe(true);
+      expect(buildRedactedText(text, result.matches)).toBe("Unsere USt-IdNr lautet [UST-IDNR]");
+    });
+
+    it("redacts both categories in the same text", () => {
+      const text = "Host 10.0.0.5 und USt-IdNr DE136695976";
+      const result = detect(text);
+      expect(buildRedactedText(text, result.matches)).toBe(
+        "Host [INTERNE IP] und USt-IdNr [UST-IDNR]",
+      );
+    });
+
+    it("ranks both categories above lower-priority overlapping matches", () => {
+      // Equal spans, so CATEGORY_PRIORITY breaks the tie. Before these two
+      // categories were added to the table they defaulted to 0 and lost
+      // against any overlapping match.
+      expect(
+        buildRedactedText("DE123456789", [
+          { category: "customer_id", ruleId: "test-customer", start: 0, end: 11 },
+          { category: "vat_id", ruleId: "test-vat", start: 0, end: 11 },
+        ]),
+      ).toBe("[UST-IDNR]");
+
+      expect(
+        buildRedactedText("10.20.30.40", [
+          { category: "phone", ruleId: "test-phone", start: 0, end: 11 },
+          { category: "internal_ip", ruleId: "test-ip", start: 0, end: 11 },
+        ]),
+      ).toBe("[INTERNE IP]");
     });
   });
 });
