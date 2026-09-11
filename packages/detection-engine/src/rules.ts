@@ -202,6 +202,37 @@ const ibanRule: DetectionRule = {
 };
 
 // --- EU VAT ID ---
+
+/**
+ * Validates the check digit of a German USt-IdNr (DE + 9 digits).
+ *
+ * The 9th digit is an ISO 7064 MOD 11,10 check digit over the first 8 — the
+ * same algorithm family as the Steuer-IdNr, see validateGermanTaxId. Without
+ * it any 9-digit run after "DE" matches, which overlaps heavily with order
+ * numbers and other long digit runs.
+ *
+ * Only DE is checked. The other supported country codes have no checksum
+ * implemented yet and pass through unchanged.
+ */
+function validateVatId(match: string): boolean {
+  const normalized = match.replace(/\s+/g, "").toUpperCase();
+  if (!normalized.startsWith("DE")) return true;
+
+  const digits = normalized.slice(2);
+  if (!/^\d{9}$/.test(digits)) return false;
+
+  // ISO 7064 MOD 11,10 check digit over the first 8 digits
+  let product = 10;
+  for (let i = 0; i < 8; i++) {
+    let sum = (Number(digits[i]) + product) % 10;
+    if (sum === 0) sum = 10;
+    product = (sum * 2) % 11;
+  }
+  const checkDigit = (11 - product) % 10;
+
+  return checkDigit === Number(digits[8]);
+}
+
 const vatIdRule: DetectionRule = {
   id: "eu-vat-id",
   category: "vat_id",
@@ -209,6 +240,7 @@ const vatIdRule: DetectionRule = {
   pattern:
     /\b(?:AT ?U\d{8}|BE ?0?\d{9}|DE ?\d{9}|FR ?[A-HJ-NP-Z0-9]{2} ?\d{9}|GB ?\d{9}|ES ?[A-Z0-9]\d{7}[A-Z0-9])\b/g,
   severity: 65,
+  validate: validateVatId,
 };
 
 // --- German Tax ID (Steuerliche Identifikationsnummer) ---
@@ -782,4 +814,4 @@ export const BUILT_IN_RULES: DetectionRule[] = [
   customerIdRule,
 ];
 
-export { luhnCheck, validateIban, validateGermanTaxId };
+export { luhnCheck, validateIban, validateGermanTaxId, validateVatId };
