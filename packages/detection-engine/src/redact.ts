@@ -4,7 +4,7 @@
  * buildRedactedText produces a full replacement string safe to send.
  */
 
-import type { DetectionMatch } from "@ai-compliance/shared-types";
+import type { DetectionCategory, DetectionMatch } from "@ai-compliance/shared-types";
 
 export function redactEmail(email: string): string {
   const [local, domain] = email.split("@");
@@ -54,11 +54,13 @@ export function redactMatch(text: string, category: string): string {
  * Replacement labels used in the sanitised output text.
  * These are shown to the user and sent in place of the sensitive value.
  */
-const REDACT_LABELS: Record<string, string> = {
+const REDACT_LABELS: Record<DetectionCategory, string> = {
   email: "[E-MAIL]",
   phone: "[TELEFON]",
   iban: "[IBAN]",
+  internal_ip: "[INTERNE IP]",
   swift_bic: "[SWIFT/BIC]",
+  vat_id: "[UST-IDNR]",
   tax_id: "[STEUER-ID]",
   credit_card: "[KREDITKARTE]",
   address: "[ADRESSE]",
@@ -88,13 +90,15 @@ export function buildRedactedText(text: string, matches: DetectionMatch[]): stri
   if (positioned.length === 0) return text;
 
   // Resolve overlaps: prefer longer span, break ties by category priority
-  const CATEGORY_PRIORITY: Record<string, number> = {
+  const CATEGORY_PRIORITY: Record<DetectionCategory, number> = {
     secret: 10,
     credit_card: 9,
     iban: 8,
     swift_bic: 8,
     tax_id: 8,
+    vat_id: 8,
     hr_data: 7,
+    internal_ip: 7,
     email: 6,
     phone: 5,
     address: 4,
