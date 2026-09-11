@@ -100,27 +100,27 @@ describe("Detection Engine", () => {
   describe("EU VAT ID detection", () => {
     it("detects major EU VAT ID formats", () => {
       const result = detect(
-        "VAT IDs: DE123456789, FRAB123456789, ATU12345678, GB123456789, ESX1234567A",
+        "VAT IDs: DE136695976, FRAB123456789, ATU12345678, GB123456789, ESX1234567A",
       );
       const vatMatches = result.matches.filter((m) => m.category === "vat_id");
 
       expect(result.categories).toContain("vat_id");
       expect(vatMatches.map((m) => m.matchedText).sort()).toEqual(
-        ["DE123456789", "FRAB123456789", "ATU12345678", "GB123456789", "ESX1234567A"].sort(),
+        ["DE136695976", "FRAB123456789", "ATU12345678", "GB123456789", "ESX1234567A"].sort(),
       );
     });
 
     it("detects VAT IDs with a single separator after the country prefix", () => {
-      const result = detect("Supplier VAT numbers: DE 123456789 and AT U12345678");
+      const result = detect("Supplier VAT numbers: DE 136695976 and AT U12345678");
       const vatMatches = result.matches.filter((m) => m.category === "vat_id");
 
-      expect(vatMatches.map((m) => m.matchedText)).toEqual(["DE 123456789", "AT U12345678"]);
+      expect(vatMatches.map((m) => m.matchedText)).toEqual(["DE 136695976", "AT U12345678"]);
     });
 
     it("assigns medium severity to VAT IDs", () => {
-      const result = detect("Business partner VAT ID: DE123456789");
+      const result = detect("Business partner VAT ID: DE136695976");
 
-      expect(result.severityScore).toBe(52);
+      expect(result.severityScore).toBe(62);
       expect(result.recommendation).toBe("warn");
     });
 
@@ -128,6 +128,36 @@ describe("Detection Engine", () => {
       const result = detect("Invalid values: DE12345, ATU1234, NL123456789B");
 
       expect(result.matches.filter((m) => m.category === "vat_id").length).toBe(0);
+    });
+
+    it("accepts German VAT IDs with a valid MOD 11,10 check digit", () => {
+      // Real, publicly listed USt-IdNrn
+      for (const vat of ["DE136695976", "DE811907980", "DE811128135", "DE129273398"]) {
+        const result = detect(`Rechnung an ${vat}`);
+        expect(result.matches.some((m) => m.category === "vat_id")).toBe(true);
+      }
+    });
+
+    it("rejects German VAT IDs with an invalid check digit", () => {
+      // Structurally valid (DE + 9 digits) but the check digit does not match
+      for (const vat of ["DE123456789", "DE111111111", "DE136695970"]) {
+        const result = detect(`Rechnung an ${vat}`);
+        expect(result.matches.filter((m) => m.category === "vat_id").length).toBe(0);
+      }
+    });
+
+    it("validates German VAT IDs written with a separator", () => {
+      // The rule pattern is case-sensitive, so only the separator varies here
+      for (const vat of ["DE136695976", "DE 136695976"]) {
+        const result = detect(`USt-IdNr: ${vat}`);
+        expect(result.matches.some((m) => m.category === "vat_id")).toBe(true);
+      }
+    });
+
+    it("leaves non-DE country codes unvalidated", () => {
+      // No checksum implemented for these yet — they must still match on shape
+      const result = detect("VAT: ATU12345678, GB123456789, ESX1234567A");
+      expect(result.matches.filter((m) => m.category === "vat_id").length).toBe(3);
     });
   });
 
@@ -460,7 +490,7 @@ describe("Detection Engine", () => {
     });
 
     it("labels a VAT ID instead of falling back to [GESPERRT]", () => {
-      const text = "Unsere USt-IdNr lautet DE123456789";
+      const text = "Unsere USt-IdNr lautet DE136695976";
       const result = detect(text);
       expect(result.matches.some((m) => m.category === "vat_id")).toBe(true);
       expect(buildRedactedText(text, result.matches)).toBe("Unsere USt-IdNr lautet [UST-IDNR]");
