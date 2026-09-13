@@ -4,7 +4,12 @@ import type {
   DetectionResult,
   CustomPattern,
 } from "@ai-compliance/shared-types";
-import { BUILT_IN_RULES, type DetectionRule } from "./rules";
+import {
+  BUILT_IN_RULES,
+  PATTERN_ONLY_CONFIDENCE,
+  VALIDATED_CONFIDENCE,
+  type DetectionRule,
+} from "./rules";
 
 // ── Overlap resolution ───────────────────────────────────────────────────────
 
@@ -29,7 +34,7 @@ function resolveOverlappingMatches(matches: DetectionMatch[]): DetectionMatch[] 
   // Effective severity so lower-confidence matches lose to structural rules
   const effectiveSev = (m: Positioned): number => {
     const rule = BUILT_IN_RULES.find((r) => r.id === m.ruleId);
-    return (rule?.severity ?? 30) * (m.confidence ?? 0.8);
+    return (rule?.severity ?? 30) * (m.confidence ?? PATTERN_ONLY_CONFIDENCE);
   };
 
   // Sort: highest severity first, then longest span first
@@ -169,6 +174,16 @@ export function detect(
   };
 }
 
+/**
+ * Confidence is a 0..1 probability. Rule validators are an extension point, so
+ * guard against values outside that range rather than letting them distort the
+ * severity score.
+ */
+function clampConfidence(value: number): number {
+  if (!Number.isFinite(value)) return PATTERN_ONLY_CONFIDENCE;
+  return Math.min(Math.max(value, 0), 1);
+}
+
 function runRule(text: string, rule: DetectionRule): DetectionMatch[] {
   const matches: DetectionMatch[] = [];
   // Reset regex state
@@ -180,13 +195,21 @@ function runRule(text: string, rule: DetectionRule): DetectionMatch[] {
     const start = m.index;
     const end = start + matched.length;
 
-    // Run optional validator (e.g. Luhn check, known test domain filter)
-    if (rule.validate && !rule.validate(matched)) {
-      continue;
+    // Run optional validator (e.g. Luhn check, known test domain filter).
+    // A validator may also report the confidence for this specific match —
+    // rules whose checksum covers only part of what their pattern matches use
+    // that to avoid claiming validated confidence for the unchecked remainder.
+    let baseConfidence = PATTERN_ONLY_CONFIDENCE;
+    if (rule.validate) {
+      const result = rule.validate(matched);
+      if (typeof result === "boolean") {
+        if (!result) continue;
+        baseConfidence = VALIDATED_CONFIDENCE;
+      } else {
+        if (!result.valid) continue;
+        baseConfidence = clampConfidence(result.confidence ?? VALIDATED_CONFIDENCE);
+      }
     }
-
-    // Base confidence: higher when a validator confirmed structural validity
-    const baseConfidence = rule.validate ? 0.95 : 0.8;
 
     // Reduce confidence when the match is surrounded by example/dummy language
     const confidence = hasExampleContext(text, start, end)
@@ -224,7 +247,7 @@ function computeSeverity(matches: DetectionMatch[]): number {
   const effectiveSeverities = matches.map((m) => {
     const rule = BUILT_IN_RULES.find((r) => r.id === m.ruleId);
     const baseSeverity = rule?.severity ?? 30;
-    const confidence = m.confidence ?? 0.8;
+    const confidence = m.confidence ?? PATTERN_ONLY_CONFIDENCE;
     return baseSeverity * confidence;
   });
 

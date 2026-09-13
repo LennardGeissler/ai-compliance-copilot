@@ -1,12 +1,38 @@
 import type { DetectionCategory } from "@ai-compliance/shared-types";
 
+/**
+ * Confidence for a match whose structural validity a validator confirmed
+ * (checksum, known-domain filter, ...).
+ */
+export const VALIDATED_CONFIDENCE = 0.95;
+
+/**
+ * Confidence for a match that only satisfied the rule's pattern.
+ */
+export const PATTERN_ONLY_CONFIDENCE = 0.8;
+
+/**
+ * Outcome of a rule validator.
+ *
+ * A plain boolean covers the common case: the match is discarded, or confirmed
+ * with VALIDATED_CONFIDENCE. A validator that only covers part of what its own
+ * pattern matches returns the object form instead, to report the confidence
+ * that actually applies to this match rather than to the rule as a whole —
+ * see validateVatId, where only DE has a checksum.
+ */
+export interface ValidationResult {
+  valid: boolean;
+  /** 0..1. Defaults to VALIDATED_CONFIDENCE when omitted. */
+  confidence?: number;
+}
+
 export interface DetectionRule {
   id: string;
   category: DetectionCategory;
   name: string;
   pattern: RegExp;
   severity: number;
-  validate?: (match: string) => boolean;
+  validate?: (match: string) => boolean | ValidationResult;
 }
 
 // --- Email ---
@@ -212,14 +238,18 @@ const ibanRule: DetectionRule = {
  * numbers and other long digit runs.
  *
  * Only DE is checked. The other supported country codes have no checksum
- * implemented yet and pass through unchanged.
+ * implemented yet, so they match on shape alone and report the lower
+ * PATTERN_ONLY_CONFIDENCE. Scoring them as if a checksum had confirmed them
+ * would overstate the certainty of every non-DE match.
  */
-function validateVatId(match: string): boolean {
+function validateVatId(match: string): ValidationResult {
   const normalized = match.replace(/\s+/g, "").toUpperCase();
-  if (!normalized.startsWith("DE")) return true;
+  if (!normalized.startsWith("DE")) {
+    return { valid: true, confidence: PATTERN_ONLY_CONFIDENCE };
+  }
 
   const digits = normalized.slice(2);
-  if (!/^\d{9}$/.test(digits)) return false;
+  if (!/^\d{9}$/.test(digits)) return { valid: false };
 
   // ISO 7064 MOD 11,10 check digit over the first 8 digits
   let product = 10;
@@ -230,7 +260,7 @@ function validateVatId(match: string): boolean {
   }
   const checkDigit = (11 - product) % 10;
 
-  return checkDigit === Number(digits[8]);
+  return { valid: checkDigit === Number(digits[8]) };
 }
 
 const vatIdRule: DetectionRule = {

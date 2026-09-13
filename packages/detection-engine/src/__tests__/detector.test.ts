@@ -159,6 +159,62 @@ describe("Detection Engine", () => {
       const result = detect("VAT: ATU12345678, GB123456789, ESX1234567A");
       expect(result.matches.filter((m) => m.category === "vat_id").length).toBe(3);
     });
+
+    it("reports validated confidence only for the country code that has a checksum", () => {
+      // DE passes a MOD 11,10 check digit; the others match on shape alone, so
+      // they must not inherit the rule-level "has a validator" confidence
+      const result = detect("VAT: DE136695976, FRAB123456789, ATU12345678");
+      const confidenceByText = new Map(
+        result.matches
+          .filter((m) => m.category === "vat_id")
+          .map((m) => [m.matchedText, m.confidence]),
+      );
+
+      expect(confidenceByText.get("DE136695976")).toBe(0.95);
+      expect(confidenceByText.get("FRAB123456789")).toBe(0.8);
+      expect(confidenceByText.get("ATU12345678")).toBe(0.8);
+    });
+
+    it("keeps one rule id across both confidence levels", () => {
+      // Policies target this rule through customRuleIds — splitting German VAT
+      // IDs into their own rule would silently narrow their coverage
+      const result = detect("VAT: DE136695976, FRAB123456789");
+      const vatMatches = result.matches.filter((m) => m.category === "vat_id");
+
+      expect(vatMatches.length).toBe(2);
+      expect(vatMatches.every((m) => m.ruleId === "eu-vat-id")).toBe(true);
+    });
+
+    it("scores an unvalidated VAT ID below a checksum-verified one", () => {
+      // 65 × 0.95 = 62 vs. 65 × 0.8 = 52
+      expect(detect("Business partner VAT ID: DE136695976").severityScore).toBe(62);
+      expect(detect("Business partner VAT ID: FRAB123456789").severityScore).toBe(52);
+    });
+  });
+
+  describe("per-match confidence", () => {
+    it("assigns validated confidence to rules with a plain boolean validator", () => {
+      const result = detect("IBAN: DE89370400440532013000");
+
+      expect(result.matches.find((m) => m.category === "iban")?.confidence).toBe(0.95);
+    });
+
+    it("assigns pattern-only confidence to rules without a validator", () => {
+      const result = detect("Server runs on 192.168.1.50");
+
+      expect(result.matches.find((m) => m.category === "internal_ip")?.confidence).toBe(0.8);
+    });
+
+    it("still applies the example-context factor on top of a reported confidence", () => {
+      // A validator-reported confidence is a base value, not a final one
+      const plain = detect("Lieferant: FRAB123456789");
+      const inExample = detect("Zum Beispiel eine VAT-ID wie FRAB123456789");
+      const confidenceOf = (r: ReturnType<typeof detect>) =>
+        r.matches.find((m) => m.category === "vat_id")?.confidence;
+
+      expect(confidenceOf(plain)).toBe(0.8);
+      expect(confidenceOf(inExample)).toBeLessThan(0.8);
+    });
   });
 
   describe("SWIFT/BIC detection", () => {
