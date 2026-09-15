@@ -122,8 +122,12 @@ export function detect(
           confidence: 0.8,
         });
       }
-    } catch {
-      // Invalid regex — skip silently
+    } catch (err) {
+      // Invalid regex — skip pattern but surface the failure for operators.
+      console.warn(
+        `[detection-engine] invalid custom pattern id=${cp.id}:`,
+        err instanceof Error ? err.message : err,
+      );
     }
   }
 
