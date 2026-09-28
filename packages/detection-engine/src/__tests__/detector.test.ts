@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { detect } from "../detector";
 import { buildRedactedText } from "../redact";
 
@@ -579,4 +579,29 @@ describe("Detection Engine", () => {
       ).toBe("[INTERNE IP]");
     });
   });
+
+  describe("custom patterns", () => {
+    it("skips an invalid regex and warns instead of failing silently", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = detect("some text", [
+        {
+          id: "broken",
+          name: "Broken pattern",
+          category: "custom_keyword",
+          pattern: "([unclosed",
+          severity: 50,
+        },
+      ]);
+
+      expect(result.matches).toHaveLength(0);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining("id=broken"),
+        expect.anything(),
+      );
+
+      warn.mockRestore();
+    });
+  });
 });
+
