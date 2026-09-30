@@ -595,13 +595,9 @@ describe("Detection Engine", () => {
       ]);
 
       expect(result.matches).toHaveLength(0);
-      expect(warn).toHaveBeenCalledWith(
-        expect.stringContaining("id=broken"),
-        expect.anything(),
-      );
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("id=broken"), expect.anything());
 
       warn.mockRestore();
     });
   });
 });
-
